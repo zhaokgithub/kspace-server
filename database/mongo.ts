@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { DB_URL, DB_USER, DB_PWD } from '../helpper/env';
+console.log('DB_URL: ', DB_URL);
 
 
 mongoose.connect(DB_URL || '').then(() => {

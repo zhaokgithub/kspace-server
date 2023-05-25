@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 console.log('ENV: ', dotenv.config());
 
 app.use(Routes);
+
 app.use(async (ctx: any) => {
     ctx.status = 404
     ctx.body = 'not found!';
