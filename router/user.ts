@@ -8,4 +8,4 @@ userRoute.post('/create/', async (ctx: any) => {
     ctx.body = 'Hello user create';
 })
 
-export { userRoute }
+export default userRoute;
