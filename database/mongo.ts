@@ -2,8 +2,14 @@ import mongoose from "mongoose";
 import { DB_URL, DB_USER, DB_PWD } from '../helpper/env';
 console.log('DB_URL: ', DB_URL);
 
-
-mongoose.connect(DB_URL || '').then(() => {
+const dbOptions = {
+    socketTimeoutMS: 0,
+    keepAlive: true,
+    useNewUrlParser: true,
+    user: DB_USER,
+    pass: DB_PWD,
+};
+mongoose.connect(DB_URL || '',dbOptions).then(() => {
     console.log('Mongodb Connectd...');
 }).catch(err => {
     console.log('err: ', err);
@@ -32,3 +38,6 @@ db.on('reconnected', function (err) {
 db.on('error', function (err) {
     console.log('--------error')
 });
+
+
+export default mongoose;
