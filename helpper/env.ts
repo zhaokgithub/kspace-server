@@ -5,3 +5,4 @@ export const DB_URL = process.env.DB_URL;
 export const DB_USER = process.env.DB_USER;
 export const DB_PWD = process.env.DB_PWD;
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+export const FILE_STORAGE_ROOT = process.env.FILE_STORAGE_ROOT

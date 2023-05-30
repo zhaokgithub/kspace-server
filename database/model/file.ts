@@ -1,11 +1,13 @@
 import mongoose from "../mongo";
 
 const fileSchema = new mongoose.Schema({
-    account: { type: String,},
-    userName: { type: String, required: true },
-    password: { type: String, required: true },
-    role: { type: Number, required: true, default: 3 },
-    email: { type: String, },
+    fileName: { type: String, required: true },
+    filePath: { type: String, required: true },
+    fileType: { type: Number, required: true },
+    fileSize: { type: Number },
+    isDir: { type: Boolean, default: false, required: true },
+    downloadUrl: { type: String },
+    uploader: { type: String },
     createTime: { type: Date },
     updateTime: { type: Date },
 });

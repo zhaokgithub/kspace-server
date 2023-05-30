@@ -22,6 +22,7 @@ db.on('reconnected', function (err) {
     console.log('reconnected')
 });
 db.on('error', function (err) {
+    console.log('err: ', err);
     console.log('--------error')
 });
 
