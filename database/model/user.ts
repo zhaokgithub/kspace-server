@@ -1,9 +1,9 @@
 import mongoose from "../mongo";
 
 const userSchema = new mongoose.Schema({
-    phone: { type: String, required: true, unique: true },
-    userName: { type: String, required: true, unique: true },
-    paswword: { type: String, required: true },
+    account: { type: String, required: true, unique: true },
+    userName: { type: String, required: true},
+    password: { type: String, required: true },
     role: { type: Number, required: true, default: 3 },
     email: { type: String, },
     createTime: { type: Date },

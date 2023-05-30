@@ -1,8 +1,12 @@
 
 import Koa from 'koa';
 import Routes from './router/index';
+import bodyParser from 'koa-bodyparser';
+import KoaJwt from 'koa-jwt';
 import './database/mongo';
 const app = new Koa();
+
+app.use(bodyParser())
 app.use(Routes);
 
 app.use(async (ctx: any) => {
@@ -11,8 +15,8 @@ app.use(async (ctx: any) => {
     ctx.body = 'not found!';
 });
 
-app.listen(3000, () => {
-    console.log('serving is start:3000!');
+app.listen(3001, () => {
+    console.log('serving is start:3001!');
 });
 
 app.callback()
