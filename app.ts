@@ -14,3 +14,9 @@ app.use(async (ctx: any) => {
 app.listen(3000, () => {
     console.log('serving is start:3000!');
 });
+
+app.callback()
+
+app.on('error', err => {
+    console.log(err);
+})

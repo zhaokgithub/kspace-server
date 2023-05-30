@@ -1,5 +1,4 @@
 import redis from 'redis';
-import config from '../helper/config';
 
 const createRedisClient = ()=>{
     const client = redis.createClient();
