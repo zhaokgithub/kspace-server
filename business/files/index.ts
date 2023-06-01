@@ -18,7 +18,7 @@ export const uploadFile = async (ctx: any, next: any) => {
             })
         } else {
             const { filepath, originalFilename, newFilename, mimetype, size } = uploadFiles;
-            console.log('uploadFiles: ', uploadFiles);
+            console.log('filepath: ', filepath);
             const path = filepath.replace(FILE_STORAGE_ROOT, '')
             const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
             list.push(fileData)
@@ -50,6 +50,7 @@ export const downloadFile = async (ctx: any, next: any) => {
     try {
         const { filePath, fileName } = ctx.request.query;
         const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath);
+        console.log('fileUrl: ', fileUrl);
         ctx.response.attachment(fileName);
         const fileStream = fs.createReadStream(fileUrl);
         let progress = 0;
