@@ -2,6 +2,7 @@ import mongoose from "../mongo";
 
 const fileSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    realName: { type: String, required: true },
     path: { type: String, required: true },
     //目录：1 文件：2
     type: { type: Number, default: 2 },
