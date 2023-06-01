@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "nodemon --watch ./ -e ts,tsx --exec ts-node app.ts",
     "start:prod": "tsc && pm2 start ./dist/app.js --NODE_ENV prod",
+    "build": "tsc",
     "deploy": "npm run deploy"
   },
   "dependencies": {

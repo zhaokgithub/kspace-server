@@ -2,13 +2,12 @@
 import Koa from 'koa';
 import Routes from './router/index';
 import bodyParser from 'koa-body';
-import KoaJwt from 'koa-jwt';
 import './database/mongo';
-import { FILE_STORAGE_ROOT } from './helpper/env';
+import { FILE_STORAGE_ROOT, SERVER_PORT,FILE_MAX_SIZE } from './helpper/env';
 const app = new Koa();
 
 
-app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: 999999999999, keepExtensions: true } }))
+app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
 app.use(Routes);
 
 app.use(async (ctx: any) => {
@@ -17,8 +16,8 @@ app.use(async (ctx: any) => {
     ctx.body = 'not found!';
 });
 
-app.listen(3001, () => {
-    console.log('serving is start:3001!');
+app.listen(SERVER_PORT, () => {
+    console.log(`serving is start:${SERVER_PORT}!`);
 });
 
 app.callback()
