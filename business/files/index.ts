@@ -9,11 +9,13 @@ export const uploadFile = async (ctx: any, next: any) => {
         const data = ctx.request.files;
         const uploadFiles = data.uploadFiles;
         const directory = ctx.request.body.directory;
+        console.log('directory: ', directory);
         if (Array.isArray(uploadFiles)) {
             uploadFiles.forEach((file: any) => {
                 const { filepath, originalFilename, newFilename, mimetype, size } = file;
                 const path = filepath.replace(FILE_STORAGE_ROOT, '')
                 const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
+                fs.renameSync(filepath, `${FILE_STORAGE_ROOT}/${directory}/${newFilename}`)
                 list.push(fileData)
             })
         } else {
@@ -21,13 +23,14 @@ export const uploadFile = async (ctx: any, next: any) => {
             console.log('filepath: ', filepath);
             const path = filepath.replace(FILE_STORAGE_ROOT, '')
             const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
+            fs.renameSync(filepath, `${FILE_STORAGE_ROOT}/${directory}/${newFilename}`)
             list.push(fileData)
         }
         const result = await fileModel.create(list)
-        ctx.body = { msg: "file upload!", code: 1 }
+        ctx.body = { msg: "file upload successfully!", code: 1 }
     } catch (e) {
         console.log('e: ', e);
-
+        ctx.body = { msg: "failed!", code: 0 }
     }
 }
 export const createFolder = async (ctx: any, next: any) => {
@@ -44,6 +47,7 @@ export const createFolder = async (ctx: any, next: any) => {
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e) {
         console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
     }
 }
 export const downloadFile = async (ctx: any, next: any) => {
@@ -60,6 +64,7 @@ export const downloadFile = async (ctx: any, next: any) => {
         ctx.body = fileStream;
     } catch (e) {
         console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
 
     }
 }
@@ -73,6 +78,7 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e) {
         console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
 
     }
 }
