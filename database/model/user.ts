@@ -1,6 +1,7 @@
 import mongoose from "../mongo";
 
 const userSchema = new mongoose.Schema({
+    isDel:{type:Boolean,default:false},
     account: { type: String, required: true, unique: true },
     userName: { type: String, required: true},
     password: { type: String, required: true },

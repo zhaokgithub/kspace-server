@@ -54,7 +54,9 @@ export const downloadFile = async (ctx: any, next: any) => {
     try {
         const { filePath, fileName } = ctx.request.query;
         const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath);
-        console.log('fileUrl: ', fileUrl);
+        const fileStat = fs.statSync(fileUrl);
+        const fileSize = fileStat.size;
+        ctx.set('Content-Length', fileSize.toString())
         ctx.response.attachment(fileName);
         const fileStream = fs.createReadStream(fileUrl);
         let progress = 0;

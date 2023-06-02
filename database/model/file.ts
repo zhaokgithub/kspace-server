@@ -1,6 +1,7 @@
 import mongoose from "../mongo";
 
 const fileSchema = new mongoose.Schema({
+    isDel:{type:Boolean,default:false},
     name: { type: String, required: true },
     realName: { type: String, required: true },
     path: { type: String, required: true },
