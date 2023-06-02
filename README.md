@@ -1,11 +1,19 @@
 # kpan-server
+百度网盘内存不够还有上传下载的速度限制，自己整一个自己的网盘来用，正好手里有台废弃的笔记本。
 
-#### 介绍
+## 需求分析
+- 用户管理
+    - 注册、登录
+    - 新建用户
+- 文件管理
+    - 文件上传
+    - 文件夹新建
+    - 文件列表查询
+## 软件架构
+- 前端：vue3+typescript+antd
+- 后台：koa+typescript+mongodb
 
-#### 软件架构
-
-
-#### 安装教程
+## 安装部署
 
 - 初始化环境变量
 ```
@@ -21,4 +29,22 @@ JWT_SECRET_KEY=kpan_dev20230531
 # 最大文件尺寸100M
 FILE_MAX_SIZE=104857600
 FILE_STORAGE_ROOT=E:\tmp
+```
+
+- 本地开发
+```
+yarn install
+npm run start:dev
+```
+
+- pm2部署
+```
+yarn install
+# npm run buil => pm2 start ./dist/app.js
+npm run start:prod
+```
+- docker部署
+
+```
+待定
 ```
