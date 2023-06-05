@@ -14,7 +14,10 @@
 - 后台：koa+typescript+mongodb
 
 ## 安装部署
-
+- 安装mongodb
+```
+docker pull mongo
+```
 - 初始化环境变量
 ```
 # 数据库配置
@@ -46,5 +49,5 @@ npm run start:prod
 - docker部署
 
 ```
-待定
+待开发
 ```
