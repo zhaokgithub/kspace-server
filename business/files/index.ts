@@ -59,10 +59,6 @@ export const downloadFile = async (ctx: any, next: any) => {
         ctx.set('Content-Length', fileSize.toString())
         ctx.response.attachment(fileName);
         const fileStream = fs.createReadStream(fileUrl);
-        let progress = 0;
-        fileStream.on('data', (chunk) => {
-            progress += chunk.length;
-        })
         ctx.body = fileStream;
     } catch (e) {
         console.log('e: ', e);
@@ -90,7 +86,7 @@ export const getLocalDirFiles = async (ctx:any,next:any) =>{
         const query = ctx.request.query;
         const { currentDir } = query;
         const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
-        
+
 
 
     }catch(e){
