@@ -84,3 +84,16 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
 
     }
 }
+
+export const getLocalDirFiles = async (ctx:any,next:any) =>{
+    try{
+        const query = ctx.request.query;
+        const { currentDir } = query;
+        const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
+        
+
+
+    }catch(e){
+
+    }
+}

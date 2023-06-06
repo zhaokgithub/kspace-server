@@ -10,8 +10,7 @@
     - 文件夹新建
     - 文件列表查询
 ## 软件架构
-- 前端：vue3+typescript+antd
-- 后台：koa+typescript+mongodb
+- koa+typescript+mongodb
 
 ## 安装部署
 - 安装mongodb
