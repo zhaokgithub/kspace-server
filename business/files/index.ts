@@ -8,24 +8,24 @@ export const uploadFile = async (ctx: any, next: any) => {
         let list: any[] = [];
         const data = ctx.request.files;
         const uploadFiles = data.uploadFiles;
-        const directory = ctx.request.body.directory;
+        const directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
         console.log('directory: ', directory);
         if (Array.isArray(uploadFiles)) {
             uploadFiles.forEach((file: any) => {
                 const { filepath, originalFilename, newFilename, mimetype, size } = file;
-                const path = filepath.replace(FILE_STORAGE_ROOT, '')
+                fs.renameSync(filepath, `${directory}/${newFilename}`)
+                const path = `${directory}/${originalFilename}`;
                 const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
-                fs.renameSync(filepath, `${FILE_STORAGE_ROOT}/${directory}/${newFilename}`)
                 list.push(fileData)
             })
         } else {
             const { filepath, originalFilename, newFilename, mimetype, size } = uploadFiles;
-            console.log('filepath: ', filepath);
-            const path = filepath.replace(FILE_STORAGE_ROOT, '')
+            fs.renameSync(filepath, `${directory}/${newFilename}`)
+            const path = `${directory}/${originalFilename}`;
             const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
-            fs.renameSync(filepath, `${FILE_STORAGE_ROOT}/${directory}/${newFilename}`)
             list.push(fileData)
         }
+        console.log('upload directory: ', directory);
         const result = await fileModel.create(list)
         ctx.body = { msg: "file upload successfully!", code: 1 }
     } catch (e) {
