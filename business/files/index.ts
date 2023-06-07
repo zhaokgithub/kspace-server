@@ -54,13 +54,11 @@ export const downloadFile = async (ctx: any, next: any) => {
     try {
         const { filePath, fileName } = ctx.request.query;
         const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath);
-        console.log('fileUrl: ', fileUrl);
+        const fileStat = fs.statSync(fileUrl);
+        const fileSize = fileStat.size;
+        ctx.set('Content-Length', fileSize.toString())
         ctx.response.attachment(fileName);
         const fileStream = fs.createReadStream(fileUrl);
-        let progress = 0;
-        fileStream.on('data', (chunk) => {
-            progress += chunk.length;
-        })
         ctx.body = fileStream;
     } catch (e) {
         console.log('e: ', e);
@@ -79,6 +77,19 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
     } catch (e) {
         console.log('e: ', e);
         ctx.body = { msg: "failed!", code: 0 }
+
+    }
+}
+
+export const getLocalDirFiles = async (ctx:any,next:any) =>{
+    try{
+        const query = ctx.request.query;
+        const { currentDir } = query;
+        const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
+
+
+
+    }catch(e){
 
     }
 }
