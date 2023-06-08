@@ -81,15 +81,25 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
     }
 }
 
-export const getLocalDirFiles = async (ctx:any,next:any) =>{
-    try{
+export const getLocalDirFiles = async (ctx: any, next: any) => {
+    try {
         const query = ctx.request.query;
         const { currentDir } = query;
         const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
+        const result: any[] = [];
+        ctx.body = { msg: "successfully!", code: 1, result }
+    } catch (e) {
+        console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
+    }
+}
 
-
-
-    }catch(e){
-
+export const getDeletedFiles = async (ctx: any, next: any) => {
+    try {
+        const result = await fileModel.find({ isDel: true })
+        ctx.body = { msg: "successfully!", code: 1, result }
+    } catch (e) {
+        console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
     }
 }
