@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DB_URL, DB_USER, DB_PWD } from '../helpper/env';
+import { DB_URL } from '../helpper/env';
 console.log('DB_URL: ', DB_URL);
 
 

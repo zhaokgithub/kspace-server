@@ -15,7 +15,7 @@ export const login = async (ctx: any, next: any) => {
             const token = jwt.sign(userInfo, secret, {})
             ctx.body = { msg: 'successfully', code: 1, token }
         } else {
-            ctx.body = { msg: 'user name or password is not valid!', code: 1 }
+            ctx.body = { msg: 'user name or password is not valid!', code: 0 }
         }
     } catch (e) {
         ctx.body = { msg: 'failed', code: 0 }
