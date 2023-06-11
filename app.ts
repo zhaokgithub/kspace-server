@@ -11,7 +11,7 @@ app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: ['/api/user/logi
 app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
 app.use(Routes);
 
-app.use(async (ctx: any) => {
+app.use(async (ctx: any,next) => {
     console.log('not found!');
     ctx.status = 404
     ctx.body = 'not found!';
