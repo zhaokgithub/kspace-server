@@ -1,36 +1,55 @@
 # kpan-server
+百度网盘内存不够还有上传下载的速度限制，自己整一个自己的网盘来用，正好手里有台废弃的笔记本。
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+## 需求分析
+- 用户管理
+    - 注册、登录
+    - 新建用户
+- 文件管理
+    - 文件上传
+    - 文件夹新建
+    - 文件列表查询
+- 个人知识库
+    - 保存至知识库
+    - 查看知识库内容
+## 软件架构
+- koa+typescript+mongodb
 
-#### Software Architecture
-Software architecture description
+## 安装部署
+- 安装mongodb
+```
+docker pull mongo
+```
+- 初始化环境变量
+```
+# 数据库配置
+DB_URL=mongodb://kpan_dev:123456@39.104.93.152:8017/kpan_dev?authSource=admin
+DB_USER=zhaokai
+DB_PWD=@zhao116524
 
-#### Installation
+# 服务器配置
+JWT_SECRET_KEY=kpan_dev20230531
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+# 文件配置
+# 最大文件尺寸100M
+FILE_MAX_SIZE=104857600
+FILE_STORAGE_ROOT=E:\tmp
+```
 
-#### Instructions
+- 本地开发
+```
+yarn install
+npm run start:dev
+```
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- pm2部署
+```
+yarn install
+# npm run buil => pm2 start ./dist/app.js
+npm run start:prod
+```
+- docker部署
 
-#### Contribution
-
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
-
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```
+待开发
+```

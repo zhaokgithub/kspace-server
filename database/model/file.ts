@@ -21,6 +21,7 @@ const fileSchema = new mongoose.Schema({
 
 fileSchema.pre('save', function (next) {
     this.createTime = new Date();
+    this.updateTime = new Date();
     next();
 });
 

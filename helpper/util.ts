@@ -1,4 +1,6 @@
 import CounterModel from '../database/model/counter';
+import fs from 'fs';
+import path from 'path';
 
 export let sendErrorResponse = (err: any, res: any) => {
     console.log('res: ', res);
@@ -39,3 +41,25 @@ export const generateUniqueId = async (name: string) => {
         console.log('e: ', e);
     }
 };
+
+export const getLocalDirFiles = (dir: string) => {
+    try {
+        let fileList: any = [];
+        const files = fs.readdirSync(dir) || [];
+        console.log('files: ', files);
+        files.forEach(file => {
+            const stat = fs.statSync(path.resolve(dir, file));
+            console.log('stat: ', stat);
+            const fileInfo = {
+                name: file,
+                realName: name,
+                path: path.resolve(dir, file),
+            }
+            fileList.push(fileInfo);
+        })
+        return fileList;
+    } catch (e) {
+        console.log('e: ', e);
+        return []
+    }
+}
