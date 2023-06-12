@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
+import {getLocalDirFiles} from '../../helpper/util'
 
 export const uploadFile = async (ctx: any, next: any) => {
     try {
@@ -72,7 +73,10 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
         const query = ctx.request.query;
         const { currentDir, bucketName } = query;
         const preDir = currentDir ? currentDir : `${FILE_STORAGE_ROOT}/${bucketName}}`
-        const result = await fileModel.find({ preDir })
+        console.log('preDir: ', preDir);
+        const result = await fileModel.find({ preDir:'E:\\tmp'})
+        console.log('{ preDir }: ', { preDir });
+        console.log('result: ', result);
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e) {
         console.log('e: ', e);
@@ -81,25 +85,16 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
     }
 }
 
-export const getLocalDirFiles = async (ctx: any, next: any) => {
-    try {
-        const query = ctx.request.query;
-        const { currentDir } = query;
-        const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
-        const result: any[] = [];
-        ctx.body = { msg: "successfully!", code: 1, result }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
-    }
-}
 //首次部署项目使用
 export const uploadLocalDirFiles = async (ctx: any, next: any) => {
     try {
-        const query = ctx.request.query;
-        const { currentDir } = query;
-        const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
-        const result: any[] = [];
+        const data = ctx.request.body;
+        console.log('data: ', data);
+        const { directory } = data;
+        const dir = directory ? directory : FILE_STORAGE_ROOT;
+        const fileList: any[] = getLocalDirFiles(dir);
+        const result =await fileModel.create(fileList);
+        console.log('result: ', result);
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e) {
         console.log('e: ', e);

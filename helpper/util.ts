@@ -46,14 +46,14 @@ export const getLocalDirFiles = (dir: string) => {
     try {
         let fileList: any = [];
         const files = fs.readdirSync(dir) || [];
-        console.log('files: ', files);
         files.forEach(file => {
             const stat = fs.statSync(path.resolve(dir, file));
-            console.log('stat: ', stat);
             const fileInfo = {
                 name: file,
-                realName: name,
+                realName: file,
                 path: path.resolve(dir, file),
+                size: stat.size,
+                preDir: dir
             }
             fileList.push(fileInfo);
         })
