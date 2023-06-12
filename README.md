@@ -23,15 +23,12 @@ docker pull mongo
 - 初始化环境变量
 ```
 # 数据库配置
-DB_URL=mongodb://kpan_dev:123456@39.104.93.152:8017/kpan_dev?authSource=admin
-DB_USER=zhaokai
-DB_PWD=@zhao116524
+DB_URL=mongodb://user:password@localhost:20017/kpan_dev?authSource=admin
 
 # 服务器配置
 JWT_SECRET_KEY=kpan_dev20230531
 
 # 文件配置
-# 最大文件尺寸100M
 FILE_MAX_SIZE=104857600
 FILE_STORAGE_ROOT=E:\tmp
 ```
@@ -42,13 +39,13 @@ yarn install
 npm run start:dev
 ```
 
-- pm2部署
+- Jenkins - pm2部署
 ```
 yarn install
 # npm run buil => pm2 start ./dist/app.js
 npm run start:prod
 ```
-- docker部署
+-Jenkins -  docker部署
 
 ```
 待开发

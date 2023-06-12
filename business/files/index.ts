@@ -1,6 +1,6 @@
-import fileModel from "../../database/model/file";
 import fs from 'fs';
 import path from 'path';
+import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 
 export const uploadFile = async (ctx: any, next: any) => {
@@ -82,6 +82,19 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
 }
 
 export const getLocalDirFiles = async (ctx: any, next: any) => {
+    try {
+        const query = ctx.request.query;
+        const { currentDir } = query;
+        const preDir = currentDir ? currentDir : FILE_STORAGE_ROOT;
+        const result: any[] = [];
+        ctx.body = { msg: "successfully!", code: 1, result }
+    } catch (e) {
+        console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
+    }
+}
+//首次部署项目使用
+export const uploadLocalDirFiles = async (ctx: any, next: any) => {
     try {
         const query = ctx.request.query;
         const { currentDir } = query;
