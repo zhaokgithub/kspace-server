@@ -6,17 +6,24 @@ import koaJwt from 'koa-jwt';
 import './database/mongo';
 import { FILE_STORAGE_ROOT, SERVER_PORT, FILE_MAX_SIZE, JWT_SECRET_KEY } from './helpper/env';
 const app = new Koa();
-
-app.use(async (ctx: any,next) => {
-    console.log('****** request *****');
-    console.log(ctx.request.path);
-    next()
+// 中间件 自定义了 401 响应，将用户验证失败的相关信息返回给浏览器
+app.use(function (ctx, next) {
+    return next().catch((err) => {
+        console.log('*************** request path **************');
+        console.log(ctx.request.path);
+        if (401 == err.status) {
+            ctx.status = 401;
+            ctx.body = 'Protected resource, use Authorization header to get access\n';
+        } else {
+            throw err;
+        }
+    });
 });
 app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: ['/api/user/login/'] }))
 app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
 app.use(Routes);
 
-app.use(async (ctx: any,next) => {
+app.use(async (ctx: any, next) => {
     console.log('not found!');
     ctx.status = 404
     ctx.body = 'not found!';

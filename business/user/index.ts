@@ -8,10 +8,11 @@ export const login = async (ctx: any, next: any) => {
         const data = ctx.request.body;
         const { account, password } = data;
         const user = await UserModel.findOne({ account })
+        console.log('user: ', user);
         if (user && user.password === password) {
             const userInfo = {};
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
-            console.log('secret: ', secret);
+            console.log('secret1111: ', secret);
             const token = jwt.sign(userInfo, secret, {})
             ctx.body = { msg: 'successfully', code: 1, token }
         } else {
@@ -22,6 +23,7 @@ export const login = async (ctx: any, next: any) => {
             // ctx.body = { msg: 'user name or password is not valid!', code: 0 }
         }
     } catch (e) {
+        console.log('e: ', e);
         ctx.body = { msg: 'failed', code: 0 }
     }
 }
