@@ -7,6 +7,10 @@ import './database/mongo';
 import { FILE_STORAGE_ROOT, SERVER_PORT, FILE_MAX_SIZE, JWT_SECRET_KEY } from './helpper/env';
 const app = new Koa();
 
+app.use(async (ctx: any,next) => {
+    console.log('****** request *****');
+    console.log(ctx.request.path);
+});
 app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: ['/api/user/login/'] }))
 app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
 app.use(Routes);
