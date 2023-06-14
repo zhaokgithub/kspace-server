@@ -88,13 +88,12 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
 //首次部署项目使用
 export const uploadLocalDirFiles = async (ctx: any, next: any) => {
     try {
-        const data = ctx.request.body;
-        console.log('data: ', data);
+        const data:any = ctx.request.body || {};
         const { directory } = data;
+        console.log('directory: ', directory);
         const dir = directory ? directory : FILE_STORAGE_ROOT;
         const fileList: any[] = getLocalDirFiles(dir);
         const result =await fileModel.create(fileList);
-        console.log('result: ', result);
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e) {
         console.log('e: ', e);
