@@ -1,12 +1,18 @@
 import redis from 'redis';
+import { REDIS_URL } from '../helpper/env';
 
-const createRedisClient = ()=>{
-    const client = redis.createClient();
-    client.on('error',function(error){
+const createRedisClient = async () => {
+    try {
+        const client = redis.createClient({ url: REDIS_URL });
+        await client.connect();
+        client.on('error', function (error) {
 
-    })
-    return client
+        })
+        return client
+    } catch (e) {
+        console.log(e)
+    }
 }
 const redisClient = createRedisClient();
 
-export {redisClient,};
+export { redisClient, };
