@@ -4,6 +4,7 @@ import Routes from './router/index';
 import bodyParser from 'koa-body';
 import koaJwt from 'koa-jwt';
 import './database/mongo';
+import './database/redis'
 import { FILE_STORAGE_ROOT, SERVER_PORT, FILE_MAX_SIZE, JWT_SECRET_KEY } from './helpper/env';
 const app = new Koa();
 
