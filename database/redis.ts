@@ -3,15 +3,16 @@ import { REDIS_URL } from '../helpper/env';
 
 const createRedisClient = async () => {
     try {
-        const client = createClient({ url: REDIS_URL });
+        if(!REDIS_URL)return;
+        const client = createClient({ url: REDIS_URL,password:'123456' });
         console.log(REDIS_URL)
-        await client.connect();
         client.on('error', function (error) {
             console.log('----redis connect failed!----')
         })
         client.on('connect',function(){
             console.log('----redis connect successfully!----')
         })
+        await client.connect();
         return client
     } catch (e) {
         console.log(e)
@@ -19,4 +20,4 @@ const createRedisClient = async () => {
 }
 const redisClient = createRedisClient();
 
-export { redisClient, };
+export { redisClient };
