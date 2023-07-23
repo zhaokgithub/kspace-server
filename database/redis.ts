@@ -2,6 +2,7 @@ import {createClient} from 'redis';
 import { REDIS_URL } from '../helpper/env';
 
 const createRedisClient = async () => {
+    return
     try {
         if(!REDIS_URL)return;
         const client = createClient({ url: REDIS_URL,password:'123456' });

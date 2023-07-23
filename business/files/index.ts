@@ -44,7 +44,7 @@ export const createFolder = async (ctx: any, next: any) => {
             return
         }
         fs.mkdirSync(`${dirPath}`);
-        await fileModel.create({ name: dirName, path: dirPath, preDir: currentDir || FILE_STORAGE_ROOT, type: 1 })
+        await fileModel.create({ name: dirName,realName:dirName, path: dirPath, preDir: currentDir || FILE_STORAGE_ROOT, type: 1 })
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e) {
         console.log('e: ', e);
@@ -74,8 +74,7 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
         const { currentDir, bucketName } = query;
         const preDir = currentDir ? currentDir : `${FILE_STORAGE_ROOT}/${bucketName}}`
         console.log('preDir: ', preDir);
-        const result = await fileModel.find({ preDir:'E:\\tmp'})
-        console.log('{ preDir }: ', { preDir });
+        const result = await fileModel.find({ preDir:preDir})
         console.log('result: ', result);
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e) {

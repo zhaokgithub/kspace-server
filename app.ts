@@ -10,9 +10,6 @@ const app = new Koa();
 
 app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: ['/api/user/login/'] }))
 app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
-app.use(async (ctx:any,next:any)=>{
-
-})
 app.use(Routes);
 
 app.use(async (ctx: any,next) => {
