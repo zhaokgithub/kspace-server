@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node ./dist/app.js",
     "dev": "nodemon --watch ./ -e ts,tsx --exec ts-node app.ts",
     "start:test": "tsc && pm2 start ./dist/app.js --name kpan",
+    "start": "pm2 start ./dist/app.js",
     "build": "tsc",
     "deploy": "npm run deploy"
   },

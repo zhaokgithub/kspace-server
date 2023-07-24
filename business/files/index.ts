@@ -55,6 +55,12 @@ export const downloadFile = async (ctx: any, next: any) => {
     try {
         const { filePath, fileName } = ctx.request.query;
         const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath);
+        const isExist = fs.existsSync(fileUrl);
+        if(!isExist){
+            ctx.body = { msg: "file is not existence!", code: 0 }
+            return
+        }
+        console.log('isExist: ', isExist);
         const fileStat = fs.statSync(fileUrl);
         const fileSize = fileStat.size;
         ctx.set('Content-Length', fileSize.toString())

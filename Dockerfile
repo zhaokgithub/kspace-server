@@ -14,5 +14,5 @@ RUN npm install & npm run build
 EXPOSE 3001
 
 # 定义启动命令
-CMD ['']
+CMD ['npm',"start"]
 

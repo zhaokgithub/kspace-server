@@ -9,6 +9,12 @@ fileRoute.get('/list/', async (ctx: any, next: any) => {
 fileRoute.get('/download/', async (ctx: any, next: any) => {
   await downloadFile(ctx, next);
 })
+fileRoute.get('/del/', async (ctx: any, next: any) => {
+  await downloadFile(ctx, next);
+})
+fileRoute.get('/share/', async (ctx: any, next: any) => {
+  await downloadFile(ctx, next);
+})
 
 fileRoute.post('/upload/', async (ctx: any, next: any) => {
   await uploadFile(ctx, next);
