@@ -79,6 +79,8 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
         const query = ctx.request.query;
         const { currentDir, bucketName } = query;
         const preDir = currentDir ? `${FILE_STORAGE_ROOT}/${currentDir}}` : `${FILE_STORAGE_ROOT}/${bucketName}}`
+        console.log('FILE_STORAGE_ROOT::: ', JSON.parse(JSON.stringify(FILE_STORAGE_ROOT)));
+
         console.log('preDir: ', preDir);
         const result = await fileModel.find({ preDir:preDir})
         console.log('result: ', result);
