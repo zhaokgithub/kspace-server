@@ -28,7 +28,7 @@ export const uploadFile = async (ctx: any, next: any) => {
         }
         console.log('upload directory: ', directory);
         const result = await fileModel.create(list)
-        ctx.body = { msg: "file upload successfully!", code: 1 }
+        ctx.body = { msg: "file upload successfully!", code: 1,result }
     } catch (e) {
         console.log('e: ', e);
         ctx.body = { msg: "failed!", code: 0 }

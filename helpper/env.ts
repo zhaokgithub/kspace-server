@@ -1,12 +1,19 @@
 import dotenv from 'dotenv'
 dotenv.config();
 
+//数据连接地址
 export const DB_URL = process.env.DB_URL;
+//服务端口号
+export const SERVER_PORT = process.env.SERVER_PORT
+//redis连接地址
+export const REDIS_URL = process.env.REDIS_URL
+//权限secret key
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
-export const FILE_STORAGE_ROOT = process.env.FILE_STORAGE_ROOT
-export const FILE_MAX_SIZE = process.env.FILE_MAX_SIZE
-export const FILE_BUCKET_NAME = process.env.FILE_BUCKET_NAME
 
-export const SERVER_PORT = process.env.SERVER_PORT
-export const REDIS_URL = process.env.REDIS_URL
+//文件存储根路径
+export const FILE_STORAGE_ROOT = process.env.FILE_STORAGE_ROOT
+//上传文件最大尺寸限制
+export const FILE_MAX_SIZE = process.env.FILE_MAX_SIZE
+//文件存储的桶值
+export const FILE_BUCKET_NAME = process.env.FILE_BUCKET_NAME
