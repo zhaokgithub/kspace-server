@@ -38,13 +38,14 @@ export const createFolder = async (ctx: any, next: any) => {
     try {
         const data = ctx.request.body;
         const { currentDir, dirName } = data;
-        const dirPath = `${currentDir}/${dirName}`;
+        const dirPath = `${FILE_STORAGE_ROOT}${currentDir}/${dirName}`;
+        console.log('FILE_STORAGE_ROOT',FILE_STORAGE_ROOT)
         if (fs.existsSync(dirPath)) {
             ctx.body = { msg: "directory is exist!", code: 0 }
             return
         }
         fs.mkdirSync(`${dirPath}`);
-        await fileModel.create({ name: dirName,realName:dirName, path: dirPath, preDir: currentDir || FILE_STORAGE_ROOT, type: 1 })
+        await fileModel.create({ name: dirName,realName:dirName, path: dirPath, preDir: `${FILE_STORAGE_ROOT}${currentDir}`, type: 1 })
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e) {
         console.log('e: ', e);
@@ -78,7 +79,7 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
     try {
         const query = ctx.request.query;
         const { currentDir, bucketName } = query;
-        const preDir = currentDir ? `${FILE_STORAGE_ROOT}/${currentDir}}` : `${FILE_STORAGE_ROOT}/${bucketName}}`
+        const preDir = currentDir ? `${FILE_STORAGE_ROOT}${currentDir}` : `${FILE_STORAGE_ROOT}${bucketName}`
         console.log('FILE_STORAGE_ROOT::: ', JSON.parse(JSON.stringify(FILE_STORAGE_ROOT)));
 
         console.log('preDir: ', preDir);
