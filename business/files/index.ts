@@ -62,8 +62,11 @@ export const downloadFile = async (ctx: any, next: any) => {
             return
         }
         console.log('isExist: ', isExist);
+        const file = fs.readFileSync(fileUrl)
         const fileStat = fs.statSync(fileUrl);
         const fileSize = fileStat.size;
+        console.log('==== file size ===',fileSize)
+        console.log(fileUrl)
         ctx.set('Content-Length', fileSize.toString())
         ctx.response.attachment(fileName);
         const fileStream = fs.createReadStream(fileUrl);
