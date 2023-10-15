@@ -9,8 +9,8 @@ export const uploadFile = async (ctx: any, next: any) => {
         let list: any[] = [];
         const data = ctx.request.files;
         const uploadFiles = data.uploadFiles;
-        const directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
-        console.log('directory: ', directory);
+        let directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
+        directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
         if (Array.isArray(uploadFiles)) {
             uploadFiles.forEach((file: any) => {
                 const { filepath, originalFilename, newFilename, mimetype, size } = file;
