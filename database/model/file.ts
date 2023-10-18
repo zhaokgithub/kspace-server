@@ -1,4 +1,5 @@
 import mongoose from "../mongo";
+const mongoosePaginate = require('mongoose-paginate');
 
 const fileSchema = new mongoose.Schema({
     isDel:{type:Boolean,default:false},
@@ -24,6 +25,7 @@ fileSchema.pre('save', function (next) {
     this.updateTime = new Date();
     next();
 });
+fileSchema.plugin(mongoosePaginate);
 
-const fileModel = mongoose.model('file', fileSchema, 'file');
+const fileModel:any = mongoose.model('file', fileSchema, 'file');
 export default fileModel;

@@ -1,4 +1,5 @@
 import mongoose from "../mongo";
+const mongoosePaginate = require('mongoose-paginate');
 
 const userSchema = new mongoose.Schema({
     isDel:{type:Boolean,default:false},
@@ -16,6 +17,7 @@ userSchema.pre('save', function (next) {
     this.updateTime = new Date();
     next();
 });
+userSchema.plugin(mongoosePaginate);
 
-const counterModel = mongoose.model('user', userSchema, 'user');
+const counterModel:any = mongoose.model('user', userSchema, 'user');
 export default counterModel;
