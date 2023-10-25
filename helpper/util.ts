@@ -1,6 +1,7 @@
 import CounterModel from '../database/model/counter';
 import fs from 'fs';
 import path from 'path';
+import { AUTH_MODULES } from './consant'
 
 export let sendErrorResponse = (err: any, res: any) => {
     console.log('res: ', res);
@@ -64,4 +65,23 @@ export const getLocalDirFiles = (dir: string) => {
         console.log('e: ', e);
         return []
     }
+}
+
+/**
+ * 
+ * @param userInfo 当前登录用户
+ * @param module 模块
+ */
+type UserRoleProps = 0 | 1 | 2 | 3;
+export const validateAuthMiddleware = (ctx: any, moduleType: number,callback:()=> void) => {
+    console.log('moduleType: ', moduleType);
+    const userInfo = ctx.state.user;
+    const role: UserRoleProps = userInfo ? userInfo?.role : 0;
+    const validateModules: number[] = role ? AUTH_MODULES[role] : [];
+    if(moduleType && validateModules.includes(moduleType)){
+
+    } 
+    ctx.body = 'dddd'
+    callback();
+    return
 }

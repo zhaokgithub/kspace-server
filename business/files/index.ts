@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
-import { getLocalDirFiles } from '../../helpper/util'
+import { getLocalDirFiles,validateAuthMiddleware } from '../../helpper/util'
 
 export const uploadFile = async (ctx: any, next: any) => {
     try {
@@ -81,6 +81,7 @@ export const downloadFile = async (ctx: any, next: any) => {
 export const getCurrentDirList = async (ctx: any, next: any) => {
     try {
         const query = ctx.request.query;
+        console.log('ctx: ', ctx.state);
         const { currentDir, bucketName,pageSize,page } = query;
         const limit = pageSize ? pageSize : 10;
         const preDir = currentDir ? `${FILE_STORAGE_ROOT}${currentDir}` : `${FILE_STORAGE_ROOT}${bucketName}`

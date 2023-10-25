@@ -1,9 +1,13 @@
 import Router from 'koa-router'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile,uploadLocalDirFiles } from '../business/files/index'
+import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles } from '../business/files/index'
+import { validateAuthMiddleware } from '../helpper/util'
 const fileRoute = new Router();
 
 fileRoute.get('/list/', async (ctx: any, next: any) => {
-  await getCurrentDirList(ctx, next)
+  validateAuthMiddleware(ctx, 1, async () => {
+    await getCurrentDirList(ctx, next)
+  })
+
 })
 
 fileRoute.get('/download/', async (ctx: any, next: any) => {

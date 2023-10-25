@@ -3,22 +3,27 @@ import { generateUniqueId } from '../../helpper/util'
 import { JWT_SECRET_KEY } from '../../helpper/env';
 import * as jwt from 'jsonwebtoken';
 
+
+const USER_KEYS = ['account', 'userName', 'role', 'email', 'phone']
 export const login = async (ctx: any, next: any) => {
     try {
         const data = ctx.request.body;
         const { account, password } = data;
-        const user = await UserModel.findOne({ account })
-        console.log('user: ', user);
+        const user = await UserModel.findOne({ account }).lean();
         if (user && user.password === password) {
-            const userInfo = {};
+            let userInfo: any = {};
+            Object.keys(user).forEach((key: string) => {
+                if (USER_KEYS.includes(key)) {
+                    userInfo[key] = user[key];
+                }
+            })
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
-            console.log('secret1111: ', secret);
             const token = jwt.sign(userInfo, secret, {})
             ctx.body = { msg: 'successfully', code: 1, token }
         } else {
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
             console.log('secret: ', secret);
-            const token = jwt.sign({user:'zk'}, secret, {})
+            const token = jwt.sign({ user: 'zk' }, secret, {})
             ctx.body = { msg: 'successfully', code: 1, token }
             // ctx.body = { msg: 'user name or password is not valid!', code: 0 }
         }

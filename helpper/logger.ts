@@ -28,3 +28,5 @@ log4js.configure({
     pm2:true
 });
 let logger = log4js.getLogger();
+
+export default logger;
