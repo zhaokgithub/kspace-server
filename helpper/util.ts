@@ -2,15 +2,16 @@ import CounterModel from '../database/model/counter';
 import fs from 'fs';
 import path from 'path';
 import { AUTH_MODULES } from './consant'
-
-export let sendErrorResponse = (err: any, res: any) => {
-    console.log('res: ', res);
-    try {
-        console.log(err)
-    } catch (e) { }
+import { Context, Next } from 'koa';
+export let sendErrorResponse = (ctx: Context, msg?: string, code?: number) => {
+    const errMsg = { code: code || 0, errMsg: msg || 'failed!' };
+    ctx.body = errMsg;
 }
 
-export let sendNormalResponse = (data: any, res: any) => { }
+export let sendNormalResponse = (ctx: Context, msg: string, code?: number) => {
+    const successMsg = { code: code || 1, errMsg: msg || 'successfully!' };
+    ctx.body = successMsg;
+}
 
 export let getClientIp = (req: any) => {
     console.log("x-forwarded-for = " + req.header('x-forwarded-for')); // 各阶段ip的CSV, 最左侧的是原始ip
@@ -73,15 +74,14 @@ export const getLocalDirFiles = (dir: string) => {
  * @param module 模块
  */
 type UserRoleProps = 0 | 1 | 2 | 3;
-export const validateAuthMiddleware = (ctx: any, moduleType: number,callback:()=> void) => {
-    console.log('moduleType: ', moduleType);
+export const validateAuthMiddleware = async (ctx: any, next: any, moduleType: string, action: string, callback: any) => {
     const userInfo = ctx.state.user;
     const role: UserRoleProps = userInfo ? userInfo?.role : 0;
-    const validateModules: number[] = role ? AUTH_MODULES[role] : [];
-    if(moduleType && validateModules.includes(moduleType)){
-
-    } 
-    ctx.body = 'dddd'
-    callback();
-    return
+    const validateModules: string[] = role ? AUTH_MODULES[role] : [];
+    console.log('validateModules: ', validateModules);
+    if (moduleType && validateModules.includes(`${moduleType}_${action}`)) {
+        await callback(ctx, next);
+    } else {
+        sendErrorResponse(ctx, 'Not Auth！')
+    }
 }

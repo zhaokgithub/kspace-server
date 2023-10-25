@@ -1,35 +1,38 @@
 import Router from 'koa-router'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles } from '../business/files/index'
+import { Context, Next } from 'koa'
+import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile } from '../business/files/index'
 import { validateAuthMiddleware } from '../helpper/util'
 const fileRoute = new Router();
 
-fileRoute.get('/list/', async (ctx: any, next: any) => {
-  validateAuthMiddleware(ctx, 1, async () => {
-    await getCurrentDirList(ctx, next)
-  })
+
+
+fileRoute.get('/share/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'update', downloadFile)
 
 })
 
-fileRoute.get('/download/', async (ctx: any, next: any) => {
+fileRoute.post('/upload/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'add', uploadFile)
+})
+
+fileRoute.post('/local/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'add', uploadLocalDirFiles)
+})
+
+fileRoute.post('/directory/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'add', createFolder)
+})
+
+fileRoute.get('/del/:fileId/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'delete', deleteFile)
+})
+
+fileRoute.get('/list/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'query', getCurrentDirList)
+})
+
+fileRoute.get('/download/', async (ctx: Context, next: Next) => {
   await downloadFile(ctx, next);
-})
-fileRoute.get('/del/', async (ctx: any, next: any) => {
-  await downloadFile(ctx, next);
-})
-fileRoute.get('/share/', async (ctx: any, next: any) => {
-  await downloadFile(ctx, next);
-})
-
-fileRoute.post('/upload/', async (ctx: any, next: any) => {
-  await uploadFile(ctx, next);
-})
-fileRoute.post('/local/', async (ctx: any, next: any) => {
-  await uploadLocalDirFiles(ctx, next);
-})
-
-fileRoute.post('/directory/', async (ctx: any, next: any) => {
-  console.log('file directory');
-  await createFolder(ctx, next);
 })
 
 export default fileRoute

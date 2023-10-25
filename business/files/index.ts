@@ -2,12 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
-import { getLocalDirFiles,validateAuthMiddleware } from '../../helpper/util'
+import { getLocalDirFiles, validateAuthMiddleware } from '../../helpper/util'
+import { Context, Next } from 'koa'
 
-export const uploadFile = async (ctx: any, next: any) => {
+export const uploadFile = async (ctx: Context, next: Next) => {
     try {
         let list: any[] = [];
         const data = ctx.request.files;
+        if (!data) {
+            ctx.body = { msg: "failed!", code: 0 };
+            return
+        }
         const uploadFiles = data.uploadFiles;
         let directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
         directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
@@ -34,7 +39,7 @@ export const uploadFile = async (ctx: any, next: any) => {
         ctx.body = { msg: "failed!", code: 0 }
     }
 }
-export const createFolder = async (ctx: any, next: any) => {
+export const createFolder = async (ctx: Context, next: Next) => {
     try {
         const data = ctx.request.body;
         const { currentDir, dirName } = data;
@@ -52,10 +57,10 @@ export const createFolder = async (ctx: any, next: any) => {
         ctx.body = { msg: "failed!", code: 0 }
     }
 }
-export const downloadFile = async (ctx: any, next: any) => {
+export const downloadFile = async (ctx: Context, next: Next) => {
     try {
         const { filePath, fileName } = ctx.request.query;
-        const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath);
+        const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath as string);
         const isExist = fs.existsSync(fileUrl);
         if (!isExist) {
             ctx.body = { msg: "file is not existence!", code: 0 }
@@ -68,7 +73,7 @@ export const downloadFile = async (ctx: any, next: any) => {
         console.log('==== file size ===', fileSize)
         console.log(fileUrl)
         ctx.set('Content-Length', fileSize.toString())
-        ctx.response.attachment(fileName);
+        ctx.response.attachment(fileName as string);
         const fileStream = fs.createReadStream(fileUrl);
         ctx.body = fileStream;
     } catch (e) {
@@ -78,18 +83,15 @@ export const downloadFile = async (ctx: any, next: any) => {
     }
 }
 
-export const getCurrentDirList = async (ctx: any, next: any) => {
+export const getCurrentDirList = async (ctx: Context, next: Next) => {
     try {
         const query = ctx.request.query;
-        console.log('ctx: ', ctx.state);
-        const { currentDir, bucketName,pageSize,page } = query;
+        const { currentDir, bucketName, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
         const preDir = currentDir ? `${FILE_STORAGE_ROOT}${currentDir}` : `${FILE_STORAGE_ROOT}${bucketName}`
         console.log('FILE_STORAGE_ROOT::: ', JSON.parse(JSON.stringify(FILE_STORAGE_ROOT)));
-
         console.log('preDir: ', preDir);
         const result = await fileModel.paginate({ preDir: preDir }, { page: page || 1, limit });
-        console.log('result: ', result);
         const data = {
             total: result?.total,
             list: result?.docs,
@@ -105,7 +107,7 @@ export const getCurrentDirList = async (ctx: any, next: any) => {
 }
 
 //首次部署项目使用
-export const uploadLocalDirFiles = async (ctx: any, next: any) => {
+export const uploadLocalDirFiles = async (ctx: Context, next: Next) => {
     try {
         const data: any = ctx.request.body || {};
         const { directory } = data;
@@ -120,7 +122,18 @@ export const uploadLocalDirFiles = async (ctx: any, next: any) => {
     }
 }
 
-export const getDeletedFiles = async (ctx: any, next: any) => {
+export const deleteFile = async (ctx: Context, next: Next) => {
+    try {
+        const result = await fileModel.update({}, { isDel: true })
+        ctx.body = { msg: "successfully!", code: 1, result }
+    } catch (e) {
+        console.log('e: ', e);
+        ctx.body = { msg: "failed!", code: 0 }
+    }
+}
+
+
+export const getDeletedFiles = async (ctx: any, next: Next) => {
     try {
         const result = await fileModel.find({ isDel: true })
         ctx.body = { msg: "successfully!", code: 1, result }
