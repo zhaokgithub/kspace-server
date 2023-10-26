@@ -1,6 +1,6 @@
 import KoaRouter from 'koa-router';
-import userRoute from './user';
-import fileRoute from './file';
+import userRoute from './api/user';
+import fileRoute from './api/file';
 const router = new KoaRouter();
 
 router.use('/api/user', userRoute.routes(), userRoute.allowedMethods());

@@ -4,12 +4,15 @@ import path from 'path';
 import { AUTH_MODULES } from './consant'
 import { Context, Next } from 'koa';
 export let sendErrorResponse = (ctx: Context, msg?: string, code?: number) => {
+    const params = ctx.request;
+    const url = params.url;
+    console.log('request url ========: ', url);
     const errMsg = { code: code || 0, errMsg: msg || 'failed!' };
     ctx.body = errMsg;
 }
 
-export let sendNormalResponse = (ctx: Context, msg: string, code?: number) => {
-    const successMsg = { code: code || 1, errMsg: msg || 'successfully!' };
+export let sendNormalResponse = (ctx: Context, result?: any, msg?: string, code?: number,) => {
+    const successMsg = { code: code || 1, errMsg: msg || 'successfully!', result: result || null };
     ctx.body = successMsg;
 }
 

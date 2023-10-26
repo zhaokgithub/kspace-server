@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { login, logout, createUser, queryUserGroup, queryUserLib } from '../business/user/index'
+import { login, logout, createUser, queryUserGroup, queryUserLib } from '../../business/user/index'
 
 const userRoute = new Router();
 userRoute.get('/list/', async (ctx: any, next: any) => {

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
-import { getLocalDirFiles } from '../../helpper/util'
+import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { calculateFileMd5, saveFileToLocal } from './fileHandle'
 import { Context, Next } from 'koa'
 
@@ -124,6 +124,16 @@ export const deleteFile = async (ctx: Context, next: Next) => {
 
 
 export const getDeletedFiles = async (ctx: any, next: Next) => {
+    try {
+        const result = await fileModel.find({ isDel: true })
+        sendNormalResponse(ctx, result)
+    } catch (e) {
+        sendErrorResponse(ctx)
+    }
+}
+
+
+export const generateFileSharingLink = async (ctx: any, next: Next) => {
     try {
         const result = await fileModel.find({ isDel: true })
         ctx.body = { msg: "successfully!", code: 1, result }

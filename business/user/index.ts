@@ -18,14 +18,13 @@ export const login = async (ctx: any, next: any) => {
                 }
             })
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
-            const token = jwt.sign(userInfo, secret, {})
+            const token = jwt.sign(userInfo, secret, {expiresIn:'1d'})
             ctx.body = { msg: 'successfully', code: 1, token }
         } else {
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
             console.log('secret: ', secret);
             const token = jwt.sign({ user: 'zk' }, secret, {})
             ctx.body = { msg: 'successfully', code: 1, token }
-            // ctx.body = { msg: 'user name or password is not valid!', code: 0 }
         }
     } catch (e) {
         console.log('e: ', e);

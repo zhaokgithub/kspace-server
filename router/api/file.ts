@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import { Context, Next } from 'koa'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile } from '../business/files/index'
-import { validateAuthMiddleware } from '../helpper/util'
+import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile } from '../../business/files/index'
+import { validateAuthMiddleware } from '../../helpper/util'
 const fileRoute = new Router();
 
 
@@ -32,6 +32,9 @@ fileRoute.get('/list/', async (ctx: Context, next: Next) => {
 })
 
 fileRoute.get('/download/', async (ctx: Context, next: Next) => {
+  await downloadFile(ctx, next);
+})
+fileRoute.get('/tmperay/', async (ctx: Context, next: Next) => {
   await downloadFile(ctx, next);
 })
 
