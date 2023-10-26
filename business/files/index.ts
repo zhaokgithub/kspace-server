@@ -2,33 +2,24 @@ import fs from 'fs';
 import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
-import { getLocalDirFiles, validateAuthMiddleware } from '../../helpper/util'
+import { getLocalDirFiles } from '../../helpper/util'
+import { calculateFileMd5, saveFileToLocal } from './fileHandle'
 import { Context, Next } from 'koa'
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
         let list: any[] = [];
         const data = ctx.request.files;
-        if (!data) {
-            ctx.body = { msg: "failed!", code: 0 };
-            return
-        }
-        const uploadFiles = data.uploadFiles;
+        const uploadFiles = data ? data.uploadFiles : [];
         let directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
         directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
         if (Array.isArray(uploadFiles)) {
             uploadFiles.forEach((file: any) => {
-                const { filepath, originalFilename, newFilename, mimetype, size } = file;
-                fs.renameSync(filepath, `${directory}/${newFilename}`)
-                const path = `${directory}/${originalFilename}`;
-                const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
+                const fileData = saveFileToLocal(file, directory);
                 list.push(fileData)
             })
         } else {
-            const { filepath, originalFilename, newFilename, mimetype, size } = uploadFiles;
-            fs.renameSync(filepath, `${directory}/${newFilename}`)
-            const path = `${directory}/${originalFilename}`;
-            const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
+            const fileData = saveFileToLocal(uploadFiles, directory);
             list.push(fileData)
         }
         console.log('upload directory: ', directory);
@@ -67,7 +58,6 @@ export const downloadFile = async (ctx: Context, next: Next) => {
             return
         }
         console.log('isExist: ', isExist);
-        const file = fs.readFileSync(fileUrl)
         const fileStat = fs.statSync(fileUrl);
         const fileSize = fileStat.size;
         console.log('==== file size ===', fileSize)
