@@ -1,13 +1,13 @@
 import Router from 'koa-router'
 import { Context, Next } from 'koa'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile } from '../../business/files/index'
+import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile,generateFileShareLink } from '../../business/files/index'
 import { validateAuthMiddleware } from '../../helpper/util'
 const fileRoute = new Router();
 
 
 
 fileRoute.get('/share/', async (ctx: Context, next: Next) => {
-  await validateAuthMiddleware(ctx, next, 'file', 'update', downloadFile)
+  await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
 
 })
 

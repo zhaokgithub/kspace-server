@@ -25,9 +25,8 @@ export const uploadFile = async (ctx: Context, next: Next) => {
         console.log('upload directory: ', directory);
         const result = await fileModel.create(list)
         ctx.body = { msg: "file upload successfully!", code: 1, result }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
 export const createFolder = async (ctx: Context, next: Next) => {
@@ -43,9 +42,8 @@ export const createFolder = async (ctx: Context, next: Next) => {
         fs.mkdirSync(`${dirPath}`);
         await fileModel.create({ name: dirName, realName: dirName, path: dirPath, preDir: `${FILE_STORAGE_ROOT}${currentDir}`, type: 1 })
         ctx.body = { msg: "directory create successfully!", code: 1 }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
 export const downloadFile = async (ctx: Context, next: Next) => {
@@ -66,9 +64,8 @@ export const downloadFile = async (ctx: Context, next: Next) => {
         ctx.response.attachment(fileName as string);
         const fileStream = fs.createReadStream(fileUrl);
         ctx.body = fileStream;
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
 
     }
 }
@@ -89,9 +86,8 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
             pageSize: result?.limit
         }
         ctx.body = { msg: "successfully!", code: 1, data }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
 
     }
 }
@@ -106,9 +102,8 @@ export const uploadLocalDirFiles = async (ctx: Context, next: Next) => {
         const fileList: any[] = getLocalDirFiles(dir);
         const result = await fileModel.create(fileList);
         ctx.body = { msg: "successfully!", code: 1, result }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
 
@@ -116,9 +111,8 @@ export const deleteFile = async (ctx: Context, next: Next) => {
     try {
         const result = await fileModel.update({}, { isDel: true })
         ctx.body = { msg: "successfully!", code: 1, result }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
 
@@ -127,18 +121,17 @@ export const getDeletedFiles = async (ctx: any, next: Next) => {
     try {
         const result = await fileModel.find({ isDel: true })
         sendNormalResponse(ctx, result)
-    } catch (e) {
-        sendErrorResponse(ctx)
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
 
 
-export const generateFileSharingLink = async (ctx: any, next: Next) => {
+export const generateFileShareLink = async (ctx: any, next: Next) => {
     try {
         const result = await fileModel.find({ isDel: true })
-        ctx.body = { msg: "successfully!", code: 1, result }
-    } catch (e) {
-        console.log('e: ', e);
-        ctx.body = { msg: "failed!", code: 0 }
+        sendNormalResponse(ctx, result)
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
     }
 }
