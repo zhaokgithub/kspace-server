@@ -6,7 +6,8 @@ import { Context, Next } from 'koa';
 export let sendErrorResponse = (ctx: Context, msg?: string, code?: number) => {
     const params = ctx.request;
     const url = params.url;
-    console.log('request url ========: ', url);
+    console.log('======= error request url ========: ', url);
+    console.log('======= error msg =====: ', msg);
     const errMsg = { code: code || 0, errMsg: msg || 'failed!' };
     ctx.body = errMsg;
 }

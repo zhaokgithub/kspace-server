@@ -11,7 +11,7 @@ const crypto = require('crypto')
 export const saveFileToLocal = (file: any, directory: string) => {
     const { filepath, originalFilename, newFilename, mimetype, size } = file;
     fs.renameSync(filepath, `${directory}/${newFilename}`)
-    const path = `${directory}/${originalFilename}`;
+    const path = `${directory}/${newFilename}`;
     const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
     return fileData;
 }

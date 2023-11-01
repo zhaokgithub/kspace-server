@@ -10,8 +10,9 @@ export const uploadFile = async (ctx: Context, next: Next) => {
     try {
         let list: any[] = [];
         const data = ctx.request.files;
+        console.log('data: ', data);
         const uploadFiles = data ? data.uploadFiles : [];
-        let directory = ctx.request.body.directory ? ctx.request.body.directory : FILE_STORAGE_ROOT;
+        let directory = ctx.request.body.directory ? ctx.request.body.directory : '';
         directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
         if (Array.isArray(uploadFiles)) {
             uploadFiles.forEach((file: any) => {
@@ -24,7 +25,7 @@ export const uploadFile = async (ctx: Context, next: Next) => {
         }
         console.log('upload directory: ', directory);
         const result = await fileModel.create(list)
-        ctx.body = { msg: "file upload successfully!", code: 1, result }
+        ctx.body = { msg: "file upload successfully!", code: 1, result: null }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
     }
