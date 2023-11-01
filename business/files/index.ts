@@ -10,7 +10,6 @@ export const uploadFile = async (ctx: Context, next: Next) => {
     try {
         let list: any[] = [];
         const data = ctx.request.files;
-        console.log('data: ', data);
         const uploadFiles = data ? data.uploadFiles : [];
         let directory = ctx.request.body.directory ? ctx.request.body.directory : '';
         directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
@@ -78,7 +77,6 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const limit = pageSize ? pageSize : 10;
         const preDir = currentDir ? `${FILE_STORAGE_ROOT}${currentDir}` : `${FILE_STORAGE_ROOT}${bucketName}`
         console.log('FILE_STORAGE_ROOT::: ', JSON.parse(JSON.stringify(FILE_STORAGE_ROOT)));
-        console.log('preDir: ', preDir);
         const result = await fileModel.paginate({ preDir: preDir }, { page: page || 1, limit });
         const data = {
             total: result?.total,
