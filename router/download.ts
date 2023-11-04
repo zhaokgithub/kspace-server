@@ -1,5 +1,10 @@
 import Router from 'koa-router'
-import { Context, Next } from 'koa'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile } from '../business/files/index'
-import { validateAuthMiddleware } from '../helpper/util'
-const fileRoute = new Router();
+const downloadRouter = new Router();
+import { downloadFile } from '../business/files/index'
+
+downloadRouter.get('/list/', async (ctx: any, next: any) => {
+    console.log('file');
+    downloadFile(ctx, next)
+})
+
+export default downloadRouter;
