@@ -24,7 +24,7 @@ export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) 
     const hash = crypto.createHash('md5');
     const stat = fs.statSync('./index.ts')
     if (stat.size < 1024 * 1024 * 100) {
-        const buffer:any = fs.readFileSync(filePath);
+        const buffer: any = fs.readFileSync(filePath);
         hash.update(buffer, 'utf8');
         const md5 = hash.digest('hex');
         callback && callback(md5)
@@ -41,7 +41,9 @@ export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) 
     })
 }
 
-const generateImageThumbnail = ()=>{
-    
+export const generateImageThumbnail = async (fileName: string, directory: string) => {
+    const fileThumbnailPngBuffer = await sharp(`${directory}/${fileName}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
+    fs.writeFileSync(`${directory}/${fileName.replace(".JPG", '')}_thumbnail.png`, fileThumbnailPngBuffer)
+    return `${fileName.replace(".JPG", '')}_thumbnail.png`;
 }
 
