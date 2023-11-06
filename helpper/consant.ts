@@ -8,3 +8,14 @@ export const AUTH_MODULES = {
     2: ['file_query', 'file_add', 'file_download'],
     3: ['file_query'],
 }
+
+/**
+ * 
+ */
+export const FILE_TYPE_MAP ={
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+}

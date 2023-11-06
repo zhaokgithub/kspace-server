@@ -3,7 +3,7 @@ import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
-import { calculateFileMd5, saveFileToLocal } from './fileHandle'
+import { generateImageThumbnail, generateImageThumbnailBatch } from './fileHandle'
 import { Context, Next } from 'koa'
 
 export const uploadFile = async (ctx: Context, next: Next) => {
@@ -14,12 +14,9 @@ export const uploadFile = async (ctx: Context, next: Next) => {
         let directory = ctx.request.body.directory ? ctx.request.body.directory : '';
         directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
         if (Array.isArray(uploadFiles)) {
-            uploadFiles.forEach((file: any) => {
-                const fileData = saveFileToLocal(file, directory);
-                list.push(fileData)
-            })
+            list = await generateImageThumbnailBatch(uploadFiles, directory);
         } else {
-            const fileData = saveFileToLocal(uploadFiles, directory);
+            const fileData = await generateImageThumbnail(uploadFiles, directory);
             list.push(fileData)
         }
         console.log('upload directory: ', directory);

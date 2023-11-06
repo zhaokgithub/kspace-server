@@ -6,7 +6,7 @@ const fileSchema = new mongoose.Schema({
     name: { type: String, required: true },
     realName: { type: String, required: true },
     path: { type: String, required: true },
-    //目录：1 文件：2
+    //目录：1 文档：2 图片：3 视频：4 音频：5 其他：6
     type: { type: Number, default: 2 },
     mimetype: { type: String },
     size: { type: Number },

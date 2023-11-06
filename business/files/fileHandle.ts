@@ -2,19 +2,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 import sharp from 'sharp';
 
-/**
- * 
- * @param file 
- * @param directory  保存文件的目录
- * @returns 文件信息
- */
-export const saveFileToLocal = (file: any, directory: string) => {
-    const { filepath, originalFilename, newFilename, mimetype, size } = file;
-    fs.renameSync(filepath, `${directory}/${newFilename}`)
-    const path = `${directory}/${newFilename}`;
-    const fileData = { path, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size };
-    return fileData;
-}
+
 
 interface CalculateFileMd5Props {
     filePath: string;
@@ -41,9 +29,51 @@ export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) 
     })
 }
 
-export const generateImageThumbnail = async (fileName: string, directory: string) => {
+
+
+interface FileDataProps {
+    path: string;
+    mimetype: string;
+    name: string;
+    realName: string;
+    preDir: string;
+    size: number;
+    fileName?: string;
+    thumbnail?: string;
+}
+
+/**
+ * 
+ * @param file 
+ * @param directory  保存文件的目录
+ * @returns 文件信息
+ */
+export const saveFileToLocal = (file: any, directory: string): FileDataProps => {
+    const { filepath, originalFilename, newFilename, mimetype, size } = file;
+    fs.renameSync(filepath, `${directory}/${newFilename}`)
+    const filePath: string = `${directory}/${newFilename}`;
+    const md5 = calculateFileMd5({ filePath })
+    const fileData = { path: filePath, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size,md5 };
+    return fileData;
+}
+
+export const generateImageThumbnail = async (file: any, directory: string) => {
+    const fileData = await saveFileToLocal(file,directory);
+    const fileName = file?.realName;
     const fileThumbnailPngBuffer = await sharp(`${directory}/${fileName}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
-    fs.writeFileSync(`${directory}/${fileName.replace(".JPG", '')}_thumbnail.png`, fileThumbnailPngBuffer)
-    return `${fileName.replace(".JPG", '')}_thumbnail.png`;
+    const thumbnail = `${fileName.replace(".JPG", '')}_thumbnail.png`;
+    fs.writeFileSync(`${directory}/${thumbnail}`, fileThumbnailPngBuffer);
+    fileData.thumbnail = thumbnail;
+    return fileData;
+}
+
+export const generateImageThumbnailBatch = async (fileList: any[], directory: string) => {
+    const list = fileList.map(async file => {
+        return await generateImageThumbnail(file?.realName, directory)
+    })
+    return Promise.all(list);
+    // const fileThumbnailPngBuffer = await sharp(`${directory}/${fileName}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
+    // fs.writeFileSync(`${directory}/${fileName.replace(".JPG", '')}_thumbnail.png`, fileThumbnailPngBuffer)
+    // return `${fileName.replace(".JPG", '')}_thumbnail.png`;
 }
 
