@@ -5,14 +5,16 @@ const fileSchema = new mongoose.Schema({
     isDel:{type:Boolean,default:false},
     name: { type: String, required: true },
     realName: { type: String, required: true },
-    path: { type: String, required: true },
-    //目录：1 文档：2 图片：3 视频：4 音频：5 其他：6
+    //目录：1 文件：2
     type: { type: Number, default: 2 },
     mimetype: { type: String },
     size: { type: Number },
     preDir: { type: String },
     fileMd5: { type: String },
+    //root+bucketName+path等于实际路径
+    root: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
+    path: { type: String, required: true },
     downloadUrl: { type: String },
     uploader: { type: String },
     createTime: { type: Date },
