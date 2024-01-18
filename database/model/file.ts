@@ -2,9 +2,8 @@ import mongoose from "../mongo";
 const mongoosePaginate = require('mongoose-paginate');
 
 const fileSchema = new mongoose.Schema({
-    isDel:{type:Boolean,default:false},
+    isDel: { type: Boolean, default: false },
     name: { type: String, required: true },
-    realName: { type: String, required: true },
     //目录：1 文件：2
     type: { type: Number, default: 2 },
     mimetype: { type: String },
@@ -14,6 +13,7 @@ const fileSchema = new mongoose.Schema({
     //root+bucketName+path等于实际路径
     root: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
+    objectName: { type: String },
     path: { type: String, required: true },
     downloadUrl: { type: String },
     uploader: { type: String },
@@ -29,5 +29,5 @@ fileSchema.pre('save', function (next) {
 });
 fileSchema.plugin(mongoosePaginate);
 
-const fileModel:any = mongoose.model('file', fileSchema, 'file');
+const fileModel: any = mongoose.model('file', fileSchema, 'file');
 export default fileModel;
