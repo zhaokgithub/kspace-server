@@ -3,17 +3,15 @@ import fs from 'fs';
 import path from 'path';
 import { AUTH_MODULES } from './consant'
 import { Context, Next } from 'koa';
-export let sendErrorResponse = (ctx: Context, msg?: string, code?: number) => {
+export let sendErrorResponse = (ctx: Context, errMsg?: string, code?: number) => {
     const params = ctx.request;
     const url = params.url;
-    console.log('======= error request url ========: ', url);
-    console.log('======= error msg =====: ', msg);
-    const errMsg = { code: code || 0, errMsg: msg || 'failed!' };
-    ctx.body = errMsg;
+    console.log('======= error msg =====: ', errMsg);
+    ctx.body = { code: code || 0, errMsg: errMsg || 'failed!' };
 }
 
 export let sendNormalResponse = (ctx: Context, result?: any, msg?: string, code?: number,) => {
-    const successMsg = { code: code || 1, errMsg: msg || 'successfully!', result: result || null };
+    const successMsg = { code: code || 1, msg: msg || 'successfully!', result: result || null };
     ctx.body = successMsg;
 }
 
@@ -86,6 +84,7 @@ export const validateAuthMiddleware = async (ctx: any, next: any, moduleType: st
     if (moduleType && validateModules.includes(`${moduleType}_${action}`)) {
         await callback(ctx, next);
     } else {
-        sendErrorResponse(ctx, 'Not Auth！')
+        await callback(ctx, next);
+        // sendErrorResponse(ctx, 'Not Auth！')
     }
 }

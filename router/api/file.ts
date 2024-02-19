@@ -6,10 +6,6 @@ const fileRoute = new Router();
 
 
 
-fileRoute.get('/share/', async (ctx: Context, next: Next) => {
-  await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
-
-})
 //生成minio上传的URL
 fileRoute.get('/uploadUrl/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
@@ -23,10 +19,7 @@ fileRoute.post('/local/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', uploadLocalDirFiles)
 })
 
-fileRoute.post('/directory/', async (ctx: Context, next: Next) => {
-  await validateAuthMiddleware(ctx, next, 'file', 'add', createFolder)
-})
-
+//查询文件详细信息
 fileRoute.get('/del/:fileId/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'delete', deleteFile)
 })
@@ -41,5 +34,7 @@ fileRoute.get('/download/', async (ctx: Context, next: Next) => {
 fileRoute.get('/tmperay/', async (ctx: Context, next: Next) => {
   await downloadFile(ctx, next);
 })
-
+fileRoute.get('/share/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
+})
 export default fileRoute

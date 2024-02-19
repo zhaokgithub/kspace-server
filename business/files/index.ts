@@ -135,10 +135,21 @@ export const generateFileShareLink = async (ctx: any, next: Next) => {
 }
 export const generateFileUploadUrl = async (ctx: any, next: Next) => {
     try {
-        const data =ctx.body;
-        const result = await fileModel.find({ isDel: true })
-        
-        sendNormalResponse(ctx, result)
+        const params = ctx.query
+        console.log('params: ', params);
+        const getUploadUrl= new Promise((resolve,reject)=>{
+            getMinioPresignedPutObject(params,(url,err)=>{
+                if(url){
+                    resolve(url)
+                }else{
+                    reject(err)
+                }
+            })
+        })
+        const url = await getUploadUrl;
+        console.log('url: ', url);
+
+        sendNormalResponse(ctx, {url})
     } catch (e: any) {
         sendErrorResponse(ctx, e)
     }
