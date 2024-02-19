@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import { Context, Next } from 'koa'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile,generateFileShareLink } from '../../business/files/index'
+import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile,generateFileShareLink,generateFileUploadUrl} from '../../business/files/index'
 import { validateAuthMiddleware } from '../../helpper/util'
 const fileRoute = new Router();
 
@@ -10,7 +10,11 @@ fileRoute.get('/share/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
 
 })
-
+//生成minio上传的URL
+fileRoute.get('/uploadUrl/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
+})
+//创建一条文件信息
 fileRoute.post('/upload/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', uploadFile)
 })

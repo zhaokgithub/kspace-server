@@ -5,6 +5,8 @@ import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { generateImageThumbnail, generateImageThumbnailBatch } from './fileHandle'
 import { Context, Next } from 'koa'
+import { getMinioPresignedPutObject } from './minioHandle';
+
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
@@ -126,6 +128,16 @@ export const getDeletedFiles = async (ctx: any, next: Next) => {
 export const generateFileShareLink = async (ctx: any, next: Next) => {
     try {
         const result = await fileModel.find({ isDel: true })
+        sendNormalResponse(ctx, result)
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
+    }
+}
+export const generateFileUploadUrl = async (ctx: any, next: Next) => {
+    try {
+        const data =ctx.body;
+        const result = await fileModel.find({ isDel: true })
+        
         sendNormalResponse(ctx, result)
     } catch (e: any) {
         sendErrorResponse(ctx, e)

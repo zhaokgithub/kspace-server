@@ -17,3 +17,11 @@ export const FILE_STORAGE_ROOT = process.env.FILE_STORAGE_ROOT
 export const FILE_MAX_SIZE = process.env.FILE_MAX_SIZE
 //文件存储的桶值
 export const FILE_BUCKET_NAME = process.env.FILE_BUCKET_NAME
+//minio host
+export const MINIO_CLIENT_HOST = process.env.MINIO_CLIENT_HOST
+//minio port
+export const MINIO_CLIENT_PORT = process.env.MINIO_CLIENT_PORT
+//minio secret key
+export const MINIO_CLIENT_SECRETKEY = process.env.MINIO_CLIENT_SECRETKEY
+//minio access key
+export const MINIO_CLIENT_ACCESSKEY = process.env.MINIO_CLIENT_ACCESSKEY
