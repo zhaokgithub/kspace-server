@@ -4,7 +4,7 @@ const mongoosePaginate = require('mongoose-paginate');
 const fileSchema = new mongoose.Schema({
     isDel: { type: Boolean, default: false },
     name: { type: String, required: true },
-    //目录：1 文件：2
+    //目录：1 图片：2 文本：3 音频：4 视频：5 pdf：6 其他：7
     type: { type: Number, default: 2 },
     mimetype: { type: String },
     size: { type: Number },
