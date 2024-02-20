@@ -4,18 +4,14 @@ const mongoosePaginate = require('mongoose-paginate');
 const fileSchema = new mongoose.Schema({
     isDel: { type: Boolean, default: false },
     name: { type: String, required: true },
-    //目录：1 图片：2 文本：3 音频：4 视频：5 pdf：6 其他：7
-    type: { type: Number, default: 2 },
-    mimetype: { type: String },
+    currentDir: { type: String },
+    //1:文件夹 2:图片 3:文本 4:word文档 5:pdf 6:音频 7:
+    fileType: { type: Number },
     size: { type: Number },
-    preDir: { type: String },
     fileMd5: { type: String },
-    //root+bucketName+path等于实际路径
     root: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
-    objectName: { type: String },
-    path: { type: String, required: true },
-    downloadUrl: { type: String },
+    thumbnailPath: { type: String },
     uploader: { type: String },
     createTime: { type: Date },
     updateTime: { type: Date },

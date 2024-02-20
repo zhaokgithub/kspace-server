@@ -3,26 +3,18 @@ import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
-import { generateImageThumbnail, generateImageThumbnailBatch } from './fileHandle'
+import { generateImageThumbnail, generateImageThumbnailBatch,getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
 import { getMinioPresignedPutObject } from './minioHandle';
 
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
-        let list: any[] = [];
-        const data = ctx.request.files;
-        const uploadFiles = data ? data.uploadFiles : [];
-        let directory = ctx.request.body.directory ? ctx.request.body.directory : '';
-        directory = directory ? `${FILE_STORAGE_ROOT}${directory}` : FILE_STORAGE_ROOT;
-        if (Array.isArray(uploadFiles)) {
-            list = await generateImageThumbnailBatch(uploadFiles, directory);
-        } else {
-            const fileData = await generateImageThumbnail(uploadFiles, directory);
-            list.push(fileData)
-        }
-        console.log('upload directory: ', directory);
-        const result = await fileModel.create(list)
+        let data:any = ctx.request.body;
+        data.bucketName = data?.bucketName || "istorage-res";
+        data.fileType = getUploadFileType(data)
+        console.log('data: ', data);
+        const result = await fileModel.create(data)
         ctx.body = { msg: "file upload successfully!", code: 1, result: null }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
@@ -54,11 +46,8 @@ export const downloadFile = async (ctx: Context, next: Next) => {
             ctx.body = { msg: "file is not existence!", code: 0 }
             return
         }
-        console.log('isExist: ', isExist);
         const fileStat = fs.statSync(fileUrl);
         const fileSize = fileStat.size;
-        console.log('==== file size ===', fileSize)
-        console.log(fileUrl)
         ctx.set('Content-Length', fileSize.toString())
         ctx.response.attachment(fileName as string);
         const fileStream = fs.createReadStream(fileUrl);
@@ -72,11 +61,9 @@ export const downloadFile = async (ctx: Context, next: Next) => {
 export const getCurrentDirList = async (ctx: Context, next: Next) => {
     try {
         const query = ctx.request.query;
-        const { currentDir, bucketName, pageSize, page } = query;
+        const { currentDir, bucketName,type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        const preDir = currentDir ? `${FILE_STORAGE_ROOT}${currentDir}` : `${FILE_STORAGE_ROOT}${bucketName}`
-        console.log('FILE_STORAGE_ROOT::: ', JSON.parse(JSON.stringify(FILE_STORAGE_ROOT)));
-        const result = await fileModel.paginate({ preDir: preDir }, { page: page || 1, limit });
+        const result = await fileModel.paginate({ currentDir,bucketName }, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,
@@ -147,8 +134,6 @@ export const generateFileUploadUrl = async (ctx: any, next: Next) => {
             })
         })
         const url = await getUploadUrl;
-        console.log('url: ', url);
-
         sendNormalResponse(ctx, {url})
     } catch (e: any) {
         sendErrorResponse(ctx, e)

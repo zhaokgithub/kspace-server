@@ -77,3 +77,13 @@ export const generateImageThumbnailBatch = async (fileList: any[], directory: st
     // return `${fileName.replace(".JPG", '')}_thumbnail.png`;
 }
 
+export const getUploadFileType = (data:any)=>{
+    if(data.fileType){
+        return data.fileType;
+    }
+    const type = data.type;
+    if(type.startsWith('image/')){
+        return 2
+    }
+
+}
