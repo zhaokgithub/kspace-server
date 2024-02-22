@@ -4,14 +4,13 @@ const mongoosePaginate = require('mongoose-paginate');
 const fileSchema = new mongoose.Schema({
     isDel: { type: Boolean, default: false },
     name: { type: String, required: true },
-    currentDir: { type: String },
-    //1:文件夹 2:图片 3:文本 4:word文档 5:pdf 6:音频 7:
-    fileType: { type: Number },
+    filePath: { type: String, required: true },
+    type: { type: String },
+    mimetype: { type: String },
     size: { type: Number },
     fileMd5: { type: String },
-    root: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
-    thumbnailPath: { type: String },
+    thumailPath: { type: String },
     uploader: { type: String },
     createTime: { type: Date },
     updateTime: { type: Date },
