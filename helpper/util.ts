@@ -84,7 +84,7 @@ export const validateAuthMiddleware = async (ctx: any, next: any, moduleType: st
     if (moduleType && validateModules.includes(`${moduleType}_${action}`)) {
         await callback(ctx, next);
     } else {
-        await callback(ctx, next);
-        // sendErrorResponse(ctx, 'Not Auth！')
+        // await callback(ctx, next);
+        sendErrorResponse(ctx, 'Not Auth！')
     }
 }
