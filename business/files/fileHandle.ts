@@ -61,7 +61,7 @@ export const generateImageThumbnail = async (file: any, directory: string) => {
     const fileData = await saveFileToLocal(file,directory);
     const fileName = file?.realName;
     const fileThumbnailPngBuffer = await sharp(`${directory}/${fileName}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
-    const thumbnail = `${fileName.replace(".JPG", '')}_thumbnail.png`;
+    const thumbnail = `thumbnail_${fileName}`;
     fs.writeFileSync(`${directory}/${thumbnail}`, fileThumbnailPngBuffer);
     fileData.thumbnail = thumbnail;
     return fileData;

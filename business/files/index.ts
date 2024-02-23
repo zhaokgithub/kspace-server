@@ -3,19 +3,20 @@ import path from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
-import { generateImageThumbnail, generateImageThumbnailBatch,getUploadFileType } from './fileHandle'
+import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject } from './minioHandle';
+import { getMinioPresignedPutObject, downloadFileObject } from './minioHandle';
+
 
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
-        let data:any = ctx.request.body;
+        let data: any = ctx.request.body;
         data.bucketName = data?.bucketName || "istorage-res";
         data.fileType = getUploadFileType(data)
-        console.log('data: ', data);
-        const result = await fileModel.create(data)
+        await fileModel.create(data)
         ctx.body = { msg: "file upload successfully!", code: 1, result: null }
+
     } catch (e: any) {
         sendErrorResponse(ctx, e)
     }
@@ -61,9 +62,9 @@ export const downloadFile = async (ctx: Context, next: Next) => {
 export const getCurrentDirList = async (ctx: Context, next: Next) => {
     try {
         const query = ctx.request.query;
-        const { currentDir, bucketName,type, pageSize, page } = query;
+        const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        const result = await fileModel.paginate({ currentDir,bucketName }, { page: page || 1, limit });
+        const result = await fileModel.paginate({ currentDir, bucketName }, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,
@@ -94,7 +95,8 @@ export const uploadLocalDirFiles = async (ctx: Context, next: Next) => {
 
 export const deleteFile = async (ctx: Context, next: Next) => {
     try {
-        const result = await fileModel.update({}, { isDel: true })
+        const fileId = ctx.params?.fileId;
+        const result = await fileModel.findOneAndUpdate({_id: fileId},{isDel: true})
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
@@ -124,17 +126,17 @@ export const generateFileUploadUrl = async (ctx: any, next: Next) => {
     try {
         const params = ctx.query
         console.log('params: ', params);
-        const getUploadUrl= new Promise((resolve,reject)=>{
-            getMinioPresignedPutObject(params,(url,err)=>{
-                if(url){
+        const getUploadUrl = new Promise((resolve, reject) => {
+            getMinioPresignedPutObject(params, (url, err) => {
+                if (url) {
                     resolve(url)
-                }else{
+                } else {
                     reject(err)
                 }
             })
         })
         const url = await getUploadUrl;
-        sendNormalResponse(ctx, {url})
+        sendNormalResponse(ctx, { url })
     } catch (e: any) {
         sendErrorResponse(ctx, e)
     }

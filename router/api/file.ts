@@ -20,7 +20,7 @@ fileRoute.post('/local/', async (ctx: Context, next: Next) => {
 })
 
 //查询文件详细信息
-fileRoute.get('/del/:fileId/', async (ctx: Context, next: Next) => {
+fileRoute.delete('/del/:fileId/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'delete', deleteFile)
 })
 

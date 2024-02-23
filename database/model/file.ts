@@ -3,8 +3,8 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const fileSchema = new mongoose.Schema({
     isDel: { type: Boolean, default: false },
-    name: { type: String, required: true },
-    filePath: { type: String, required: true },
+    fileName: { type: String, required: true },
+    filePath: { type: String},
     type: { type: String },
     mimetype: { type: String },
     size: { type: Number },
