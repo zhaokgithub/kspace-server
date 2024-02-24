@@ -7,6 +7,7 @@ import * as jwt from 'jsonwebtoken';
 const USER_KEYS = ['account', 'userName', 'role', 'email', 'phone']
 export const login = async (ctx: any, next: any) => {
     try {
+        console.log('====== user login =======');
         const data = ctx.request.body;
         const { account, password } = data;
         const user = await UserModel.findOne({ account }).lean();
@@ -19,6 +20,7 @@ export const login = async (ctx: any, next: any) => {
             })
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';
             const token = jwt.sign(userInfo, secret, {expiresIn:'1d'})
+            console.log('token: ', token);
             ctx.body = { msg: 'successfully', code: 1, token }
         } else {
             const secret = JWT_SECRET_KEY ? JWT_SECRET_KEY : '';

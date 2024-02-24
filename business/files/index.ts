@@ -5,7 +5,7 @@ import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject, downloadFileObject } from './minioHandle';
+import { getMinioPresignedPutObject } from './minioHandle';
 
 
 
