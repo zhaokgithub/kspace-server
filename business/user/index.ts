@@ -58,6 +58,7 @@ export const queryUserGroup = async (ctx: any, next: any) => {
         const result = await UserModel.find(query);
         ctx.body = { msg: 'successfully', code: 1, result }
     } catch (e) {
+        console.log('e',e);
         ctx.body = { msg: 'failed', code: 0 }
     }
 }

@@ -64,7 +64,7 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const query = ctx.request.query;
         const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        const result = await fileModel.paginate({ currentDir, bucketName }, { page: page || 1, limit });
+        const result = await fileModel.paginate({  bucketName }, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,
