@@ -64,7 +64,7 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const query = ctx.request.query;
         const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        const result = await fileModel.paginate({  bucketName }, { page: page || 1, limit });
+        const result = await fileModel.paginate({ bucketName,isDel: false }, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,
@@ -95,8 +95,10 @@ export const uploadLocalDirFiles = async (ctx: Context, next: Next) => {
 
 export const deleteFile = async (ctx: Context, next: Next) => {
     try {
-        const fileId = ctx.params?.fileId;
-        const result = await fileModel.findOneAndUpdate({_id: fileId},{isDel: true})
+        const data = ctx.request.body;
+        const fileIds = data?.fileIds || [];
+        console.log('fileIds: ', fileIds);
+        const result = await fileModel.updateMany({ _id: { $in: fileIds } }, { isDel: true })
         ctx.body = { msg: "successfully!", code: 1, result }
     } catch (e: any) {
         sendErrorResponse(ctx, e)

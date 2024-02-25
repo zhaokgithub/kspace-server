@@ -4,9 +4,9 @@ const mongoosePaginate = require('mongoose-paginate');
 const fileSchema = new mongoose.Schema({
     isDel: { type: Boolean, default: false },
     fileName: { type: String, required: true },
-    filePath: { type: String},
+    filePath: { type: String },
     type: { type: String },
-    mimetype: { type: String },
+    fileType: { type: Number },
     size: { type: Number },
     fileMd5: { type: String },
     bucketName: { type: String, default: 'istorage-res' },

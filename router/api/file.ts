@@ -20,14 +20,18 @@ fileRoute.post('/local/', async (ctx: Context, next: Next) => {
 })
 
 //查询文件详细信息
-fileRoute.delete('/del/:fileId/', async (ctx: Context, next: Next) => {
+fileRoute.post('/del/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'delete', deleteFile)
 })
-
+//查询文件详细信息
+fileRoute.get('/detail/:fileId/', async (ctx: Context, next: Next) => {
+  // await validateAuthMiddleware(ctx, next, 'file', 'delete', deleteFile)
+})
+//查询文件列表
 fileRoute.get('/list/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'query', getCurrentDirList)
 })
-
+//下载文件
 fileRoute.get('/download/', async (ctx: Context, next: Next) => {
   await downloadFile(ctx, next);
 })
