@@ -80,7 +80,6 @@ export const validateAuthMiddleware = async (ctx: any, next: any, moduleType: st
     const userInfo = ctx.state.user;
     const role: UserRoleProps = userInfo ? userInfo?.role : 0;
     const validateModules: string[] = role ? AUTH_MODULES[role] : [];
-    console.log('validateModules: ', validateModules);
     if (moduleType && validateModules.includes(`${moduleType}_${action}`)) {
         await callback(ctx, next);
     } else {

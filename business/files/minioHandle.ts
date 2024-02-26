@@ -45,7 +45,7 @@ export const uploadFileToMinioObject = ({ bucketName, fileName, filePath }: File
         'X-Amz-Meta-Testing': 1234,
         example: 5678,
     }
-    minioClient.fPutObject(bucketName, fileName, filePath, metaData, function (err: any, objInfo: any) {
+    minioClient.fPutObject(bucket, fileName, filePath, metaData, function (err: any, objInfo: any) {
         if (err) {
             return console.log(err)
         }

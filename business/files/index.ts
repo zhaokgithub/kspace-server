@@ -5,7 +5,7 @@ import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject } from './minioHandle';
+import { getMinioPresignedPutObject,uploadFileToMinioObject } from './minioHandle';
 
 
 
@@ -14,6 +14,8 @@ export const uploadFile = async (ctx: Context, next: Next) => {
         let data: any = ctx.request.body;
         data.bucketName = data?.bucketName || "istorage-res";
         data.fileType = getUploadFileType(data)
+        data.filePath = data.currentDir || "/";
+        console.log('data: ', data);
         await fileModel.create(data)
         ctx.body = { msg: "file upload successfully!", code: 1, result: null }
 
@@ -25,14 +27,8 @@ export const createFolder = async (ctx: Context, next: Next) => {
     try {
         const data = ctx.request.body;
         const { currentDir, dirName } = data;
-        const dirPath = `${FILE_STORAGE_ROOT}${currentDir}/${dirName}`;
-        console.log('FILE_STORAGE_ROOT', FILE_STORAGE_ROOT)
-        if (fs.existsSync(dirPath)) {
-            ctx.body = { msg: "directory is exist!", code: 0 }
-            return
-        }
-        fs.mkdirSync(`${dirPath}`);
-        await fileModel.create({ name: dirName, realName: dirName, path: dirPath, preDir: `${FILE_STORAGE_ROOT}${currentDir}`, type: 1 })
+        const filePath = `${currentDir}/${dirName}`;
+        await fileModel.create({ name: dirName, realName: dirName, filePath, preDir: `${FILE_STORAGE_ROOT}${currentDir}`, type: 1 })
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
@@ -64,7 +60,10 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const query = ctx.request.query;
         const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        const result = await fileModel.paginate({ bucketName,isDel: false }, { page: page || 1, limit });
+        let params:any = {bucketName,isDel: false}
+        params.filePath = currentDir || "/";
+        console.log('params: ', params);
+        const result = await fileModel.paginate(params, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,
@@ -126,8 +125,8 @@ export const generateFileShareLink = async (ctx: any, next: Next) => {
 }
 export const generateFileUploadUrl = async (ctx: any, next: Next) => {
     try {
-        const params = ctx.query
-        console.log('params: ', params);
+        const params = ctx.request.body
+        console.log('params------: ', params);
         const getUploadUrl = new Promise((resolve, reject) => {
             getMinioPresignedPutObject(params, (url, err) => {
                 if (url) {

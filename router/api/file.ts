@@ -7,7 +7,7 @@ const fileRoute = new Router();
 
 
 //生成minio上传的URL
-fileRoute.get('/uploadUrl/', async (ctx: Context, next: Next) => {
+fileRoute.post('/uploadUrl/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
 })
 //创建一条文件信息

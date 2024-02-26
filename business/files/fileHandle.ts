@@ -76,7 +76,11 @@ export const generateImageThumbnailBatch = async (fileList: any[], directory: st
     // fs.writeFileSync(`${directory}/${fileName.replace(".JPG", '')}_thumbnail.png`, fileThumbnailPngBuffer)
     // return `${fileName.replace(".JPG", '')}_thumbnail.png`;
 }
-
+/**
+ * 
+ * @param data 
+ * @returns fileType(1:文件夹 2: 图片 3: 文本 4: word 5: pdf)
+ */ 
 export const getUploadFileType = (data:any)=>{
     if(data.fileType){
         return data.fileType;
@@ -85,5 +89,9 @@ export const getUploadFileType = (data:any)=>{
     if(type.startsWith('image/')){
         return 2
     }
+    if(type.startsWith('/pdf')){
+        return 5
+    }
+    return 6
 
 }
