@@ -9,6 +9,7 @@ export const login = async (ctx: any, next: any) => {
     try {
         console.log('====== user login =======');
         const data = ctx.request.body;
+        console.log('data: ', data);
         const { account, password } = data;
         const user = await UserModel.findOne({ account }).lean();
         if (user && user.password === password) {

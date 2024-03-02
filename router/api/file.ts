@@ -10,6 +10,10 @@ const fileRoute = new Router();
 fileRoute.post('/uploadUrl/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
 })
+//生成minio图片预览的URL
+fileRoute.post('/previewUrl/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
+})
 //创建一条文件信息
 fileRoute.post('/upload/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'add', uploadFile)

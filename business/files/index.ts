@@ -5,7 +5,7 @@ import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject,uploadFileToMinioObject } from './minioHandle';
+import { getMinioPresignedPutObject,getMinioPresignedObject } from './minioHandle';
 
 
 
@@ -137,6 +137,25 @@ export const generateFileUploadUrl = async (ctx: any, next: Next) => {
             })
         })
         const url = await getUploadUrl;
+        sendNormalResponse(ctx, { url })
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
+    }
+}
+export const generateFileImagePreviewUrl = async (ctx: any, next: Next) => {
+    try {
+        const params = ctx.request.body
+        console.log('params------: ', params);
+        const getPreviewUrl = new Promise((resolve, reject) => {
+            getMinioPresignedObject(params, (url, err) => {
+                if (url) {
+                    resolve(url)
+                } else {
+                    reject(err)
+                }
+            })
+        })
+        const url = await getPreviewUrl;
         sendNormalResponse(ctx, { url })
     } catch (e: any) {
         sendErrorResponse(ctx, e)
