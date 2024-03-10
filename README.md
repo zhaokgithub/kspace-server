@@ -23,4 +23,10 @@ kpan-server采用nodejs的koa来实现一个文件服务功能
 
 # 部署
 
-docker run -d -p 9001:9000 -p 9092:9092 --name minio -e "MINIO_ACCESS_KEY=admin" -e "MINIO_SECRET_KEY=zhao116524" -v /home/minio/data:/data -v /home/minio/config:/root/.minio minio/minio server /data --console-address ":9000" -address ":9092"
+## docker部署minio
+
+```
+docker pull minio/minio
+
+docker run -d -p 9000:9000 -p 9092:9092 --name minio -e "MINIO_ACCESS_KEY=user" -e "MINIO_SECRET_KEY=password" -e "MINIO_SERVER_URL=****" -v /home/minio/data:/data -v /home/minio/config:/root/.minio minio/minio server /data --console-address ":9000" -address ":9092"
+```
