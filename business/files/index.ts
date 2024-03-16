@@ -1,11 +1,11 @@
 import fs from 'fs';
-import path from 'path';
+import path, { resolve } from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject,getMinioPresignedObject } from './minioHandle';
+import { getMinioPresignedPutObject, getMinioPresignedObject, downloadFileObject } from './minioHandle';
 
 
 
@@ -36,10 +36,20 @@ export const createFolder = async (ctx: Context, next: Next) => {
 }
 export const downloadFile = async (ctx: Context, next: Next) => {
     try {
-        const { filePath, fileName } = ctx.request.query;
-        const fileUrl = path.resolve(FILE_STORAGE_ROOT || '', filePath as string);
-        const isExist = fs.existsSync(fileUrl);
-        if (!isExist) {
+        const { fileName} = ctx.request.query;
+        const downloadFIlePromise:any = new Promise((resolve, reject) => {
+            downloadFileObject({
+                fileName: fileName  as string, callback: (fileUrl) => {
+                    if(fileUrl){
+                        resolve(fileUrl);
+                        return
+                    }
+                    reject()
+                }
+            })
+        })
+        const fileUrl = await downloadFIlePromise;
+        if (!fileUrl) {
             ctx.body = { msg: "file is not existence!", code: 0 }
             return
         }
@@ -60,7 +70,7 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const query = ctx.request.query;
         const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        let params:any = {bucketName,isDel: false}
+        let params: any = { bucketName, isDel: false }
         params.filePath = currentDir || "/";
         console.log('params: ', params);
         const result = await fileModel.paginate(params, { page: page || 1, limit });
@@ -148,6 +158,7 @@ export const generateFileImagePreviewUrl = async (ctx: any, next: Next) => {
         console.log('params------: ', params);
         const getPreviewUrl = new Promise((resolve, reject) => {
             getMinioPresignedObject(params, (url, err) => {
+                console.log('url: ', url);
                 if (url) {
                     resolve(url)
                 } else {
@@ -156,6 +167,7 @@ export const generateFileImagePreviewUrl = async (ctx: any, next: Next) => {
             })
         })
         const url = await getPreviewUrl;
+        console.log('url: ', url);
         sendNormalResponse(ctx, { url })
     } catch (e: any) {
         sendErrorResponse(ctx, e)

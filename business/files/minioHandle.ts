@@ -1,4 +1,5 @@
 const Minio = require('minio');
+import { tmpdir } from 'os';
 import { MINIO_CLIENT_ACCESSKEY, MINIO_CLIENT_HOST, MINIO_CLIENT_PORT, MINIO_CLIENT_SECRETKEY } from '../../helpper/env';
 console.log('MINIO_CLIENT_ACCESSKEY: ', MINIO_CLIENT_ACCESSKEY);
 
@@ -45,10 +46,10 @@ export const getMinioPresignedObject = ({ bucketName, fileName, expiryTime }: Pu
 }
 
 interface FileObjectParams {
-    bucketName: string;
+    bucketName?: string;
     fileName: string;
     filePath?: string;
-    callback?: (filePath: string) => void;
+    callback?: (filePath: string | null) => void;
 }
 
 
@@ -64,15 +65,15 @@ export const uploadFileToMinioObject = ({ bucketName, fileName, filePath }: File
 }
 
 
-export const downloadFileObject = ({ bucketName, fileName, callback }: FileObjectParams) => {
-    const bucket = bucketName || "istorage-res";
-    const tpmFile = `${__dirname}/tmp/${fileName}`;
-    minioClient.fGetObject(bucket, fileName, tpmFile, function (err: any) {
-        if (err) {
-            return console.log(err)
-        }
-        console.log('file download success!', tpmFile)
-        callback && callback(tpmFile);
-    })
+export const downloadFileObject = async ({ bucketName, fileName, callback }: FileObjectParams) => {
+    try {
+        const bucket = bucketName || "istorage-res";
+        const tpmFile = `./tmp/${fileName}`;
+        console.log('tpmFile: ', tpmFile);
+        await minioClient.fGetObject(bucket, fileName, tpmFile)
+        callback && callback(tpmFile)
+    } catch (E) {
+        callback && callback(null)
+    }
 }
 

@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import { Context, Next } from 'koa'
-import { uploadFile, createFolder, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile,generateFileShareLink,generateFileUploadUrl} from '../../business/files/index'
+import { uploadFile, getCurrentDirList, downloadFile, uploadLocalDirFiles,deleteFile,generateFileShareLink,generateFileUploadUrl, generateFileImagePreviewUrl} from '../../business/files/index'
 import { validateAuthMiddleware } from '../../helpper/util'
 const fileRoute = new Router();
 
@@ -12,7 +12,7 @@ fileRoute.post('/uploadUrl/', async (ctx: Context, next: Next) => {
 })
 //生成minio图片预览的URL
 fileRoute.post('/previewUrl/', async (ctx: Context, next: Next) => {
-  await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileUploadUrl)
+  await validateAuthMiddleware(ctx, next, 'file', 'add', generateFileImagePreviewUrl)
 })
 //创建一条文件信息
 fileRoute.post('/upload/', async (ctx: Context, next: Next) => {
@@ -39,9 +39,7 @@ fileRoute.get('/list/', async (ctx: Context, next: Next) => {
 fileRoute.get('/download/', async (ctx: Context, next: Next) => {
   await downloadFile(ctx, next);
 })
-fileRoute.get('/tmperay/', async (ctx: Context, next: Next) => {
-  await downloadFile(ctx, next);
-})
+
 fileRoute.get('/share/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
 })
