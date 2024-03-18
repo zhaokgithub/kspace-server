@@ -68,12 +68,17 @@ export const uploadFileToMinioObject = ({ bucketName, fileName, filePath }: File
 export const downloadFileObject = async ({ bucketName, fileName, callback }: FileObjectParams) => {
     try {
         const bucket = bucketName || "istorage-res";
-        const tpmFile = `./tmp/${fileName}`;
-        console.log('tpmFile: ', tpmFile);
+        const tpmFile = `${__dirname}/tmp/${fileName}`;
         await minioClient.fGetObject(bucket, fileName, tpmFile)
-        callback && callback(tpmFile)
-    } catch (E) {
-        callback && callback(null)
+        if(callback){
+            callback && callback(tpmFile);
+            return 
+        }
+        return tpmFile
+    } catch (err) {
+        console.log('E: ', err);
+        callback && callback(null);
+        return null
     }
 }
 

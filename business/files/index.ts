@@ -3,11 +3,10 @@ import path, { resolve } from 'path';
 import fileModel from "../../database/model/file";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
-import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle'
+import { getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
 import { getMinioPresignedPutObject, getMinioPresignedObject, downloadFileObject } from './minioHandle';
-
-
+import {addQueueTaskList} from './queue'
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
@@ -18,6 +17,10 @@ export const uploadFile = async (ctx: Context, next: Next) => {
         console.log('data: ', data);
         await fileModel.create(data)
         ctx.body = { msg: "file upload successfully!", code: 1, result: null }
+        if(data.fileType === 2){
+            console.log('--- upload success ---');
+            addQueueTaskList(JSON.stringify(data))
+        }
 
     } catch (e: any) {
         sendErrorResponse(ctx, e)

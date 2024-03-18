@@ -53,18 +53,16 @@ export const saveFileToLocal = (file: any, directory: string): FileDataProps => 
     fs.renameSync(filepath, `${directory}/${newFilename}`)
     const filePath: string = `${directory}/${newFilename}`;
     const md5 = calculateFileMd5({ filePath })
-    const fileData = { path: filePath, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size,md5 };
+    const fileData = { path: filePath, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size, md5 };
     return fileData;
 }
 
-export const generateImageThumbnail = async (file: any, directory: string) => {
-    const fileData = await saveFileToLocal(file,directory);
-    const fileName = file?.realName;
-    const fileThumbnailPngBuffer = await sharp(`${directory}/${fileName}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
-    const thumbnail = `thumbnail_${fileName}`;
+export const generateImageThumbnail = async (filePath: any, directory?: string) => {
+    const md5 = calculateFileMd5({ filePath })
+    const fileThumbnailPngBuffer = await sharp(`${filePath}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
+    const thumbnail = `thumbnail_${md5}.jpeg`;
     fs.writeFileSync(`${directory}/${thumbnail}`, fileThumbnailPngBuffer);
-    fileData.thumbnail = thumbnail;
-    return fileData;
+    return {thumbnail,md5};
 }
 
 export const generateImageThumbnailBatch = async (fileList: any[], directory: string) => {
@@ -76,20 +74,24 @@ export const generateImageThumbnailBatch = async (fileList: any[], directory: st
     // fs.writeFileSync(`${directory}/${fileName.replace(".JPG", '')}_thumbnail.png`, fileThumbnailPngBuffer)
     // return `${fileName.replace(".JPG", '')}_thumbnail.png`;
 }
+interface UploadFileParams {
+    fileType: 1 | 2 | 3 | 4 | 5;//1:文件夹 2: 图片 3: 文本 4: word 5: pdf
+    type: string;
+}
 /**
  * 
  * @param data 
  * @returns fileType(1:文件夹 2: 图片 3: 文本 4: word 5: pdf)
- */ 
-export const getUploadFileType = (data:any)=>{
-    if(data.fileType){
+ */
+export const getUploadFileType = (data: UploadFileParams) => {
+    if (data.fileType) {
         return data.fileType;
     }
     const type = data.type;
-    if(type.startsWith('image/')){
+    if (type.startsWith('image/')) {
         return 2
     }
-    if(type.startsWith('/pdf')){
+    if (type.startsWith('/pdf')) {
         return 5
     }
     return 6
