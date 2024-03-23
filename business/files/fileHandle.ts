@@ -60,9 +60,9 @@ export const saveFileToLocal = (file: any, directory: string): FileDataProps => 
 export const generateImageThumbnail = async (filePath: any, directory?: string) => {
     const md5 = calculateFileMd5({ filePath })
     const fileThumbnailPngBuffer = await sharp(`${filePath}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
-    const thumbnail = `thumbnail_${md5}.jpeg`;
-    fs.writeFileSync(`${directory}/${thumbnail}`, fileThumbnailPngBuffer);
-    return {thumbnail,md5};
+    const thumbnailPath = `${directory}/thumbnail_${md5}.jpeg`;
+    fs.writeFileSync(thumbnailPath, fileThumbnailPngBuffer);
+    return {thumbnailPath,md5,thumbnailName: `thumbnail_${md5}.jpeg`};
 }
 
 export const generateImageThumbnailBatch = async (fileList: any[], directory: string) => {

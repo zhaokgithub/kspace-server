@@ -1,19 +1,24 @@
 import fastq from 'fastq';
 import { generateImageThumbnail, generateImageThumbnailBatch, getUploadFileType } from './fileHandle';
-import { downloadFileObject,uploadFileToMinioObject} from './minioHandle';
+import { downloadFileObject, uploadFileToMinioObject } from './minioHandle';
 
 // 上传文件任务
-export const excuteUploadThumbnailTask =async (arg: any, callback: any) => {
+export const excuteUploadThumbnailTask = async (arg: any, callback: any) => {
     console.log('start excute task')
-    if(arg){
+    if (arg) {
         const fileData = JSON.parse(arg);
-        const tpmFilePath = await downloadFileObject({bucketName:fileData?.bucketName,fileName:fileData?.fileName})
-        const thumbnailData = await generateImageThumbnail(tpmFilePath)
-        console.log('tpmFile: ', tpmFilePath);
-        callback(null,'success')
-        return        
+        const tpmFilePath = await downloadFileObject({ bucketName: fileData?.bucketName, fileName: fileData?.fileName })
+        const thumbnailData = await generateImageThumbnail(tpmFilePath, __dirname);
+        const { thumbnailPath, thumbnailName } = thumbnailData;
+        uploadFileToMinioObject({
+            objectName: `/thumbnail/${thumbnailName}`, filePath: thumbnailPath,
+            callback: (filePath) => {
+                callback(thumbnailData, 'success');
+            }
+        })
+        return
     }
-    callback(null,'success')
+    callback(null, 'success')
 }
 
 const queue = fastq(excuteUploadThumbnailTask, 1);

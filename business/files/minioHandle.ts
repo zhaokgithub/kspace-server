@@ -47,19 +47,22 @@ export const getMinioPresignedObject = ({ bucketName, fileName, expiryTime }: Pu
 
 interface FileObjectParams {
     bucketName?: string;
-    fileName: string;
+    fileName?: string;
+    objectName?: string;
     filePath?: string;
     callback?: (filePath: string | null) => void;
 }
 
 
-export const uploadFileToMinioObject = ({ bucketName, fileName, filePath }: FileObjectParams) => {
+export const uploadFileToMinioObject = ({ bucketName, objectName, filePath,callback }: FileObjectParams) => {
     const bucket = bucketName || "istorage-res";
 
-    minioClient.fPutObject(bucket, fileName, filePath, function (err: any, objInfo: any) {
+    minioClient.fPutObject(bucket, objectName, filePath, function (err: any, objInfo: any) {
         if (err) {
+            callback && callback(null)
             return console.log(err)
         }
+        callback && callback(filePath || '')
         console.log('Success', objInfo.etag, objInfo.versionId)
     })
 }
