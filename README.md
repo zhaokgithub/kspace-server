@@ -23,6 +23,13 @@ kpan-server采用nodejs的koa来实现一个文件服务功能
 
 # 部署
 
+## pm2部署
+```
+yarn install
+# npm run build => pm2 start ./dist/app.js
+npm run start:prod
+```
+
 ## docker部署minio
 
 ```
