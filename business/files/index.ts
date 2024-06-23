@@ -31,7 +31,7 @@ export const createFolder = async (ctx: Context, next: Next) => {
         const data = ctx.request.body;
         const { currentDir, dirName } = data;
         const filePath = `${currentDir}/${dirName}`;
-        await fileModel.create({ name: dirName, realName: dirName, filePath, preDir: `${FILE_STORAGE_ROOT}${currentDir}`, type: 1 })
+        await fileModel.create({ name: dirName, realName: dirName, filePath, preDir: `${currentDir}`, type: 1 })
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
