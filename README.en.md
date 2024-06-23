@@ -36,7 +36,7 @@ FILE_MAX_SIZE=104857600
 FILE_STORAGE_ROOT=E:\tmp
 ```
 
-- 本地开发
+- local development
 ```
 yarn install
 npm run start:dev
