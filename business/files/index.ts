@@ -6,20 +6,22 @@ import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../h
 import { getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
 import { getMinioPresignedPutObject, getMinioPresignedObject, downloadFileObject } from './minioHandle';
-import {addQueueTaskList} from './queue'
+import { addQueueTaskList } from './queue'
+
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
         let data: any = ctx.request.body;
-        data.bucketName = data?.bucketName || "istorage-res";
+        data.bucketName = data?.bucketName || "istorage-pub";
         data.fileType = getUploadFileType(data)
         data.filePath = data.currentDir || "/";
-        console.log('data: ', data);
         await fileModel.create(data)
         ctx.body = { msg: "file upload successfully!", code: 1, result: null }
-        if(data.fileType === 2){
+        if (data.fileType === 2) {
             console.log('--- upload success ---');
-            addQueueTaskList(JSON.stringify(data))
+            setTimeout(() => {
+                addQueueTaskList(JSON.stringify(data))
+            }, 300)
         }
 
     } catch (e: any) {
@@ -39,11 +41,11 @@ export const createFolder = async (ctx: Context, next: Next) => {
 }
 export const downloadFile = async (ctx: Context, next: Next) => {
     try {
-        const { fileName} = ctx.request.query;
-        const downloadFIlePromise:any = new Promise((resolve, reject) => {
+        const { fileName } = ctx.request.query;
+        const downloadFIlePromise: any = new Promise((resolve, reject) => {
             downloadFileObject({
-                fileName: fileName  as string, callback: (fileUrl) => {
-                    if(fileUrl){
+                fileName: fileName as string, callback: (fileUrl) => {
+                    if (fileUrl) {
                         resolve(fileUrl);
                         return
                     }

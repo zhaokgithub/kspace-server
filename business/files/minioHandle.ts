@@ -17,7 +17,7 @@ interface PutObjectParams {
     expiryTime: number;
 }
 export const getMinioPresignedPutObject = ({ bucketName, fileName, expiryTime }: PutObjectParams, callback: (url: string, err?: any) => void) => {
-    const bucket = bucketName || "istorage-res";
+    const bucket = bucketName || "istorage-pub";
     minioClient.presignedPutObject(bucket, fileName, 24 * 60 * 60, function (err: any, presignedUrl: string) {
         console.log('presignedUrl: ', presignedUrl);
         if (err) {
@@ -29,7 +29,7 @@ export const getMinioPresignedPutObject = ({ bucketName, fileName, expiryTime }:
     })
 }
 export const getMinioPresignedObject = ({ bucketName, fileName, expiryTime }: PutObjectParams, callback: (url: string, err?: any) => void) => {
-    const bucket = bucketName || "istorage-res";
+    const bucket = bucketName || "istorage-pub";
     minioClient.presignedGetObject(bucket, fileName, 24 * 60 * 60, {
         'response-content-disposition': 'inline',
         'response-content-type': 'image/jpeg',
@@ -54,8 +54,8 @@ interface FileObjectParams {
 }
 
 
-export const uploadFileToMinioObject = ({ bucketName, objectName, filePath,callback }: FileObjectParams) => {
-    const bucket = bucketName || "istorage-res";
+export const uploadFileToMinioObject = ({ bucketName, objectName, filePath, callback }: FileObjectParams) => {
+    const bucket = bucketName || "istorage-pub";
 
     minioClient.fPutObject(bucket, objectName, filePath, function (err: any, objInfo: any) {
         if (err) {
@@ -70,12 +70,12 @@ export const uploadFileToMinioObject = ({ bucketName, objectName, filePath,callb
 
 export const downloadFileObject = async ({ bucketName, fileName, callback }: FileObjectParams) => {
     try {
-        const bucket = bucketName || "istorage-res";
+        const bucket = bucketName || "istorage-pub";
         const tpmFile = `${__dirname}/tmp/${fileName}`;
         await minioClient.fGetObject(bucket, fileName, tpmFile)
-        if(callback){
+        if (callback) {
             callback && callback(tpmFile);
-            return 
+            return
         }
         return tpmFile
     } catch (err) {

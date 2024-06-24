@@ -1,6 +1,7 @@
 import fs from 'fs';
 import crypto from 'crypto';
 import sharp from 'sharp';
+import path from 'path'
 
 
 
@@ -10,7 +11,7 @@ interface CalculateFileMd5Props {
 }
 export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) => {
     const hash = crypto.createHash('md5');
-    const stat = fs.statSync('./index.ts')
+    const stat = fs.statSync(path.resolve(__dirname,'index.ts'))
     if (stat.size < 1024 * 1024 * 100) {
         const buffer: any = fs.readFileSync(filePath);
         hash.update(buffer, 'utf8');
