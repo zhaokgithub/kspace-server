@@ -133,8 +133,19 @@ export const getDeletedFiles = async (ctx: any, next: Next) => {
 export const generateFileShareLink = async (ctx: any, next: Next) => {
     try {
         const data = ctx.request.body;
-        const result = await fileModel.find({ isDel: true })
-        sendNormalResponse(ctx, result)
+        const getPreviewUrl = new Promise((resolve, reject) => {
+            getMinioPresignedObject(data, (url, err) => {
+                console.log('url: ', url);
+                if (url) {
+                    resolve(url)
+                } else {
+                    reject(err)
+                }
+            })
+        })
+        const url = await getPreviewUrl;
+        console.log('url: ', url);
+        sendNormalResponse(ctx, { url })
     } catch (e: any) {
         sendErrorResponse(ctx, e)
     }
