@@ -9,9 +9,15 @@ interface CalculateFileMd5Props {
     filePath: string;
     callback?: (md5: string) => void;
 }
+/**
+ * 
+ * @param filePath 文件路径 
+ * @param callback 回调函数
+ * @returns 
+ */
 export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) => {
     const hash = crypto.createHash('md5');
-    const stat = fs.statSync(path.resolve(__dirname,'index.ts'))
+    const stat = fs.statSync(filePath)
     if (stat.size < 1024 * 1024 * 100) {
         const buffer: any = fs.readFileSync(filePath);
         hash.update(buffer, 'utf8');
@@ -19,7 +25,7 @@ export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) 
         callback && callback(md5)
         return md5;
     }
-    const fileStream = fs.createReadStream('./index.ts');
+    const fileStream = fs.createReadStream(filePath);
     fileStream.on('data', (chunk: string) => {
         hash.update(chunk, 'utf8');
     })
@@ -63,7 +69,7 @@ export const generateImageThumbnail = async (filePath: any, directory?: string) 
     const fileThumbnailPngBuffer = await sharp(`${filePath}`).rotate().resize(200).jpeg({ mozjpeg: true }).toBuffer()
     const thumbnailPath = `${directory}/thumbnail_${md5}.jpeg`;
     fs.writeFileSync(thumbnailPath, fileThumbnailPngBuffer);
-    return {thumbnailPath,md5,thumbnailName: `thumbnail_${md5}.jpeg`};
+    return { thumbnailPath, md5, thumbnailName: `thumbnail_${md5}.jpeg` };
 }
 
 export const generateImageThumbnailBatch = async (fileList: any[], directory: string) => {

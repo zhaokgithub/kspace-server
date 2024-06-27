@@ -87,3 +87,7 @@ export const validateAuthMiddleware = async (ctx: any, next: any, moduleType: st
         sendErrorResponse(ctx, 'Not Auth！')
     }
 }
+
+export const getEncryptValue = ()=>{
+    
+}
