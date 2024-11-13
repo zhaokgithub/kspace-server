@@ -41,9 +41,11 @@ export const createFolder = async (ctx: Context, next: Next) => {
 }
 export const downloadFile = async (ctx: Context, next: Next) => {
     try {
-        const { fileName } = ctx.request.query;
+        const { fileName, bucketName } = ctx.request.query;
+        console.log('fileName: ', fileName);
         const downloadFIlePromise: any = new Promise((resolve, reject) => {
             downloadFileObject({
+                bucketName: (bucketName || '') as string,
                 fileName: fileName as string, callback: (fileUrl) => {
                     if (fileUrl) {
                         resolve(fileUrl);
@@ -133,6 +135,7 @@ export const getDeletedFiles = async (ctx: any, next: Next) => {
 export const generateFileShareLink = async (ctx: any, next: Next) => {
     try {
         const data = ctx.request.body;
+        console.log('data: ', data);
         const getPreviewUrl = new Promise((resolve, reject) => {
             getMinioPresignedObject(data, (url, err) => {
                 console.log('url: ', url);

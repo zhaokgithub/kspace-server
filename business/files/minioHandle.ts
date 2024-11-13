@@ -29,6 +29,7 @@ export const getMinioPresignedPutObject = ({ bucketName, fileName, expiryTime }:
     })
 }
 export const getMinioPresignedObject = ({ bucketName, fileName, expiryTime }: PutObjectParams, callback: (url: string, err?: any) => void) => {
+    console.log('fileName: ', fileName);
     const bucket = bucketName || "istorage-pub";
     minioClient.presignedGetObject(bucket, fileName, 24 * 60 * 60, {
         'response-content-disposition': 'inline',
