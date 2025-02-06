@@ -30,10 +30,13 @@ export const uploadFile = async (ctx: Context, next: Next) => {
 }
 export const createFolder = async (ctx: Context, next: Next) => {
     try {
-        const data = ctx.request.body;
-        const { currentDir, dirName } = data;
+        const reqData = ctx.request.body;
+        const userInfo = ctx.state.user;
+        const { currentDir, dirName } = reqData;
         const filePath = `${currentDir}/${dirName}`;
-        await fileModel.create({ name: dirName, realName: dirName, filePath, preDir: `${currentDir}`, type: 1 })
+        let data = { fileName: dirName, filePath, fileType: 1, creatorId: userInfo?._id, creatorName: userInfo.name };
+        console.log('data: ', data);
+        await fileModel.create(data)
         ctx.body = { msg: "directory create successfully!", code: 1 }
     } catch (e: any) {
         sendErrorResponse(ctx, e)
@@ -77,10 +80,15 @@ export const getCurrentDirList = async (ctx: Context, next: Next) => {
         const query = ctx.request.query;
         const { currentDir, bucketName, type, pageSize, page } = query;
         const limit = pageSize ? pageSize : 10;
-        let params: any = { bucketName, isDel: false }
-        params.filePath = currentDir || "/";
+        let params: Record<string,any> = {isDel: false }
+        if(currentDir){
+            params.filePath = currentDir;
+        }
+        if(bucketName){
+            params.bucketName = bucketName;
+        }
         console.log('params: ', params);
-        const result = await fileModel.paginate(params, { page: page || 1, limit });
+        const result = await fileModel.paginate({}, { page: page || 1, limit });
         const data = {
             total: result?.total,
             list: result?.docs,

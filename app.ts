@@ -6,9 +6,10 @@ import koaJwt from 'koa-jwt';
 import './database/mongo';
 import './database/redis'
 import { FILE_STORAGE_ROOT, SERVER_PORT, FILE_MAX_SIZE, JWT_SECRET_KEY } from './helpper/env';
+import { VALID_ROUTES } from './helpper/consant';
 const app = new Koa();
 
-app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: ['/api/user/login/','/api/file/download/','/api/user/create/','/api/user/list/'] }))
+app.use(koaJwt({ secret: JWT_SECRET_KEY || '' }).unless({ path: VALID_ROUTES }))
 app.use(bodyParser({ multipart: true, formidable: { uploadDir: FILE_STORAGE_ROOT, maxFileSize: Number(FILE_MAX_SIZE), keepExtensions: true } }))
 app.use(Routes);
 

@@ -6,6 +6,7 @@ const fileSchema = new mongoose.Schema({
     fileName: { type: String, required: true },
     filePath: { type: String },
     type: { type: String },
+    //1:文件夹 2: 图片 3: 文本 4: word 5: pdf
     fileType: { type: Number },
     size: { type: Number },
     fileMd5: { type: String },
@@ -13,6 +14,8 @@ const fileSchema = new mongoose.Schema({
     thumailPath: { type: String },
     uploader: { type: String },
     createTime: { type: Date },
+    creatorName: { type: String },
+    creatorId: { type: String },
     updateTime: { type: Date },
     description: { type: String }
 });

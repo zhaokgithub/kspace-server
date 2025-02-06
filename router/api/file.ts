@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 import { Context, Next } from 'koa'
-import { uploadFile, getCurrentDirList, downloadFile, uploadLocalDirFiles, deleteFile, generateFileShareLink, generateFileUploadUrl, generateFileImagePreviewUrl } from '../../business/files/index'
+import { uploadFile, getCurrentDirList, downloadFile, uploadLocalDirFiles, deleteFile, generateFileShareLink, generateFileUploadUrl, generateFileImagePreviewUrl, createFolder } from '../../business/files/index'
 import { validateAuthMiddleware } from '../../helpper/util'
 const fileRoute = new Router();
 
@@ -42,5 +42,8 @@ fileRoute.get('/download/', async (ctx: Context, next: Next) => {
 
 fileRoute.post('/share/', async (ctx: Context, next: Next) => {
   await validateAuthMiddleware(ctx, next, 'file', 'update', generateFileShareLink)
+})
+fileRoute.post('/directory/', async (ctx: Context, next: Next) => {
+  await validateAuthMiddleware(ctx, next, 'file', 'update', createFolder)
 })
 export default fileRoute

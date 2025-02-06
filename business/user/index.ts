@@ -4,7 +4,7 @@ import { JWT_SECRET_KEY } from '../../helpper/env';
 import * as jwt from 'jsonwebtoken';
 
 
-const USER_KEYS = ['account', 'userName', 'role', 'email', 'phone']
+const USER_KEYS = ['account', 'userName', 'role', 'email', 'phone','_id']
 export const login = async (ctx: any, next: any) => {
     try {
         console.log('====== user login =======');

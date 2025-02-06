@@ -22,3 +22,5 @@ export const FILE_TYPE_MAP ={
     4: [],
     5: [],
 }
+//无需登录的请求路径
+export const VALID_ROUTES =  ['/api/user/login/','/api/file/download/','/api/user/create/','/api/user/list/'];
