@@ -12,11 +12,14 @@ const fileSchema = new mongoose.Schema({
     fileMd5: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
     thumailPath: { type: String },
+    //文件上传时间
+    uploadTime: {type:Date},
+    updateTime: { type: Date },
     uploader: { type: String },
+    uploaderId: { type: String },
+    //时间文件的创建时间
     createTime: { type: Date },
     creatorName: { type: String },
-    creatorId: { type: String },
-    updateTime: { type: Date },
     description: { type: String }
 });
 

@@ -32,6 +32,7 @@ export const excuteUploadThumbnailTask = async (arg: any, callback: any) => {
 
 const queue = fastq(excuteUploadThumbnailTask, 1);
 
+//队列分批上传
 export const addQueueTaskList = (arg: string) => {
     queue.push(arg, (err, result) => {
         if (err) {
