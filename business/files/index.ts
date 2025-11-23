@@ -1,13 +1,27 @@
 import fs from 'fs';
 import path, { resolve } from 'path';
-import fileModel from "../../database/model/file";
+import fileModel from "../../database/model/objects";
 import { FILE_STORAGE_ROOT } from '../../helpper/env';
 import { getLocalDirFiles, sendNormalResponse, sendErrorResponse } from '../../helpper/util'
 import { getUploadFileType } from './fileHandle'
 import { Context, Next } from 'koa'
-import { getMinioPresignedPutObject, getMinioPresignedObject, downloadFileObject } from './minioHandle';
+// import { getMinioPresignedPutObject, getMinioPresignedObject, downloadFileObject } from './minioHandle';
 import { addQueueTaskList } from './queue'
 
+//创建bucket
+export const createBucket = async (ctx: Context, next: Next) => {
+    try {
+        const reqData = ctx.request.body;
+        const userInfo = ctx.state.user;
+        const { bucketName } = reqData;
+        let data = { bucketName, creatorId: userInfo?._id, creatorName: userInfo.name };
+        console.log('data: ', data);
+        await fileModel.create(data)
+        ctx.body = { msg: "bucket create successfully!", code: 1 }
+    } catch (e: any) {
+        sendErrorResponse(ctx, e)
+    }
+}
 
 export const uploadFile = async (ctx: Context, next: Next) => {
     try {
@@ -47,16 +61,16 @@ export const downloadFile = async (ctx: Context, next: Next) => {
         const { fileName, bucketName } = ctx.request.query;
         console.log('fileName: ', fileName);
         const downloadFIlePromise: any = new Promise((resolve, reject) => {
-            downloadFileObject({
-                bucketName: (bucketName || '') as string,
-                fileName: fileName as string, callback: (fileUrl) => {
-                    if (fileUrl) {
-                        resolve(fileUrl);
-                        return
-                    }
-                    reject()
-                }
-            })
+            // downloadFileObject({
+            //     bucketName: (bucketName || '') as string,
+            //     fileName: fileName as string, callback: (fileUrl) => {
+            //         if (fileUrl) {
+            //             resolve(fileUrl);
+            //             return
+            //         }
+            //         reject()
+            //     }
+            // })
         })
         const fileUrl = await downloadFIlePromise;
         if (!fileUrl) {
@@ -145,14 +159,14 @@ export const generateFileShareLink = async (ctx: any, next: Next) => {
         const data = ctx.request.body;
         console.log('data: ', data);
         const getPreviewUrl = new Promise((resolve, reject) => {
-            getMinioPresignedObject(data, (url, err) => {
-                console.log('url: ', url);
-                if (url) {
-                    resolve(url)
-                } else {
-                    reject(err)
-                }
-            })
+            // getMinioPresignedObject(data, (url, err) => {
+            //     console.log('url: ', url);
+            //     if (url) {
+            //         resolve(url)
+            //     } else {
+            //         reject(err)
+            //     }
+            // })
         })
         const url = await getPreviewUrl;
         console.log('url: ', url);
@@ -165,13 +179,13 @@ export const generateFileUploadUrl = async (ctx: any, next: Next) => {
     try {
         const params = ctx.request.body
         const getUploadUrl = new Promise((resolve, reject) => {
-            getMinioPresignedPutObject(params, (url, err) => {
-                if (url) {
-                    resolve(url)
-                } else {
-                    reject(err)
-                }
-            })
+            // getMinioPresignedPutObject(params, (url, err) => {
+            //     if (url) {
+            //         resolve(url)
+            //     } else {
+            //         reject(err)
+            //     }
+            // })
         })
         const url = await getUploadUrl;
         sendNormalResponse(ctx, { url })
@@ -183,17 +197,18 @@ export const generateFileImagePreviewUrl = async (ctx: any, next: Next) => {
     try {
         const params = ctx.request.body
         console.log('params------: ', params);
-        const getPreviewUrl = new Promise((resolve, reject) => {
-            getMinioPresignedObject(params, (url, err) => {
-                console.log('url: ', url);
-                if (url) {
-                    resolve(url)
-                } else {
-                    reject(err)
-                }
-            })
-        })
-        const url = await getPreviewUrl;
+        // const getPreviewUrl = new Promise((resolve, reject) => {
+        //     getMinioPresignedObject(params, (url, err) => {
+        //         console.log('url: ', url);
+        //         if (url) {
+        //             resolve(url)
+        //         } else {
+        //             reject(err)
+        //         }
+        //     })
+        // })
+        // const url = await getPreviewUrl;
+        const url = ''
         console.log('url: ', url);
         sendNormalResponse(ctx, { url })
     } catch (e: any) {

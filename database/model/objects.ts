@@ -2,6 +2,7 @@ import mongoose from "../mongo";
 const mongoosePaginate = require('mongoose-paginate');
 
 const fileSchema = new mongoose.Schema({
+    
     isDel: { type: Boolean, default: false },
     fileName: { type: String, required: true },
     filePath: { type: String },
@@ -11,12 +12,18 @@ const fileSchema = new mongoose.Schema({
     size: { type: Number },
     fileMd5: { type: String },
     bucketName: { type: String, default: 'istorage-res' },
+    bucketId: { type: String },
     thumailPath: { type: String },
     //文件上传时间
     uploadTime: {type:Date},
     updateTime: { type: Date },
     uploader: { type: String },
     uploaderId: { type: String },
+    chunkSize: { type: Number },
+    //当前正在上传的chunk md5
+    chunkMd5: { type: String },
+    //已经上传完成的chunk 列表
+    chunkCompleteList: { type: Array },
     //时间文件的创建时间
     createTime: { type: Date },
     creatorName: { type: String },

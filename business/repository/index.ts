@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import fileModel from "../../database/model/file";
+import fileModel from "../../database/model/objects";
 
 
 export const getCurrentRepository = () => {

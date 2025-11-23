@@ -1,7 +1,6 @@
 import fs from 'fs';
 import crypto from 'crypto';
 import sharp from 'sharp';
-import path from 'path'
 
 
 
@@ -13,7 +12,7 @@ interface CalculateFileMd5Props {
  * 
  * @param filePath 文件路径 
  * @param callback 回调函数
- * @returns 
+ * @returns 文件的md5
  */
 export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) => {
     const hash = crypto.createHash('md5');
@@ -35,6 +34,30 @@ export const calculateFileMd5 = ({ filePath, callback }: CalculateFileMd5Props) 
         callback && callback(md5)
     })
 }
+/**
+ * 将文件保存到本地指定目录
+ * @param file 上传的文件对象（含临时路径等信息）
+ * @param directory 目标目录
+ * @returns 保存后的文件信息
+ */
+export const saveFileToLocal = (file: any, directory: string): FileDataProps => {
+    const { filepath, originalFilename, newFilename, mimetype, size } = file;
+    // 确保目录存在
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+    const targetPath = `${directory}/${newFilename}`;
+    // 移动文件
+    fs.renameSync(filepath, targetPath);
+    return {
+        path: targetPath,
+        mimetype,
+        name: originalFilename,
+        realName: newFilename,
+        preDir: directory,
+        size,
+    };
+};
 
 
 
@@ -49,20 +72,6 @@ interface FileDataProps {
     thumbnail?: string;
 }
 
-/**
- * 
- * @param file 
- * @param directory  保存文件的目录
- * @returns 文件信息
- */
-export const saveFileToLocal = (file: any, directory: string): FileDataProps => {
-    const { filepath, originalFilename, newFilename, mimetype, size } = file;
-    fs.renameSync(filepath, `${directory}/${newFilename}`)
-    const filePath: string = `${directory}/${newFilename}`;
-    const md5 = calculateFileMd5({ filePath })
-    const fileData = { path: filePath, mimetype, name: originalFilename, realName: newFilename, preDir: directory, size, md5 };
-    return fileData;
-}
 
 export const generateImageThumbnail = async (filePath: any, directory?: string) => {
     const md5 = calculateFileMd5({ filePath })
